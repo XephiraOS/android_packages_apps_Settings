@@ -19,11 +19,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-    android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-    android:minHeight="72dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:minHeight="64dp"
     android:gravity="center_vertical"
-    android:background="?android:attr/selectableItemBackground"
+    android:background="@drawable/bg_settings_glass_card"
     android:clipToPadding="false"
     android:baselineAligned="false">
 
@@ -35,7 +39,7 @@
         android:minHeight="40dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingStart="16dp">
+        android:layout_marginEnd="4dp">
 
         <androidx.preference.internal.PreferenceImageView
             android:id="@android:id/icon"
@@ -50,10 +54,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:paddingStart="@dimen/homepage_preference_text_padding_start_expressive"
-        android:paddingEnd="16dp">
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp">
 
         <TextView
             android:id="@android:id/title"
@@ -63,7 +67,8 @@
             android:textAlignment="viewStart"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceListItem"
-            android:textColor="@color/settingslib_text_color_primary"
+            android:textColor="@color/xephira_glass_text_primary"
+            android:fontFamily="@*android:string/config_headlineFontFamily"
             android:ellipsize="marquee"/>
 
         <TextView
@@ -75,8 +80,8 @@
             android:layout_gravity="start"
             android:textAlignment="viewStart"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/settingslib_text_color_secondary"
-            android:maxLines="4"
+            android:textColor="@color/xephira_glass_text_secondary"
+            android:maxLines="2"
             style="@style/PreferenceSummaryTextStyle"/>
     </RelativeLayout>
 
@@ -88,7 +93,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:layout_gravity="center|end"
-        android:layout_marginEnd="16dp">
+        android:layout_marginEnd="8dp">
 
         <ImageView
             android:id="@+id/alert_unnumbered"
@@ -128,4 +133,13 @@
         </FrameLayout>
 
     </FrameLayout>
+
+    <ImageView
+        android:id="@+id/xephira_chevron"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/ic_chevron_right_24dp"
+        android:tint="@color/xephira_glass_text_muted"
+        android:contentDescription="@null" />
 </LinearLayout>

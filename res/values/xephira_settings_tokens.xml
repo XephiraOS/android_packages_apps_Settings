@@ -32,4 +32,10 @@
     <color name="xephira_switch_track_off">#26FFFFFF</color>
     <color name="xephira_switch_track_on">#E60026</color>
     <color name="xephira_switch_thumb_color">#FFFFFF</color>
+
+    <!-- Core Palette & Text Colors -->
+    <color name="xephira_color_white">#FFFFFFFF</color>
+    <color name="xephira_glass_text_primary">#F0FFFFFF</color>
+    <color name="xephira_glass_text_secondary">#9EFFFFFF</color>
+    <color name="xephira_glass_text_muted">#66FFFFFF</color>
 </resources>
