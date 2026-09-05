@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 XephiraOS Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <!-- OxygenOS 17 & iOS Spatial Glass Curvature Tokens -->
+    <dimen name="xephira_settings_squircle_radius">32dp</dimen>
+    <dimen name="xephira_tile_squircle_radius">22dp</dimen>
+    <dimen name="xephira_badge_squircle_radius">16dp</dimen>
+    <dimen name="xephira_card_margin_horizontal">16dp</dimen>
+    <dimen name="xephira_specular_stroke_width">1.2dp</dimen>
+
+    <!-- Translucent Glass Colors (Spatial Dark & Frosted Light) -->
+    <color name="xephira_settings_glass_card_dark">#1C131B2A</color>
+    <color name="xephira_settings_glass_card_light">#26FFFFFF</color>
+    <color name="xephira_settings_glass_card_stroke_top">#38FFFFFF</color>
+    <color name="xephira_settings_glass_card_stroke_bottom">#0DFFFFFF</color>
+    
+    <color name="xephira_settings_glass_pill_bg">#29162032</color>
+    <color name="xephira_settings_glass_pill_stroke">#40FFFFFF</color>
+
+    <!-- OxygenOS 17 Curated Brand & Category Accents -->
+    <color name="xephira_crimson_red">#E60026</color>
+    <color name="xephira_azure_blue">#0284C7</color>
+    <color name="xephira_amber_gold">#F59E0B</color>
+    <color name="xephira_aurora_green">#10B981</color>
+    <color name="xephira_amethyst_purple">#A855F7</color>
+    <color name="xephira_neon_cyan">#00F2FE</color>
+
+    <!-- Fluid Switch & Slider Controls -->
+    <color name="xephira_switch_track_off">#26FFFFFF</color>
+    <color name="xephira_switch_track_on">#E60026</color>
+    <color name="xephira_switch_thumb_color">#FFFFFF</color>
+</resources>
