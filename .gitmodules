@@ -1,0 +1,3 @@
+[submodule "packages/XephiraLab"]
+	path = packages/XephiraLab
+	url = https://github.com/XephiraOS/android_packages_apps_XephiraLab.git

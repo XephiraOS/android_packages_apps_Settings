@@ -26,6 +26,24 @@
         android:layout="@layout/xephira_homepage_hero_card"
         settings:controller="com.android.settings.homepage.XephiraHomepageHeroController" />
 
+    <!-- Xephira Lab Spatial Liquid Customization Studio -->
+    <PreferenceCategory
+        android:order="-180"
+        android:key="top_level_xephira_lab_category"
+        android:layout="@layout/settingslib_expressive_untitled_preference_category">
+        <com.android.settings.widget.HomepagePreference
+            android:key="top_level_xephira_lab"
+            android:order="-10"
+            android:icon="@drawable/ic_xephira_lab"
+            android:title="@string/xephira_lab_title"
+            android:summary="@string/xephira_lab_summary">
+            <intent
+                android:action="org.xephira.lab.SETTINGS"
+                android:targetPackage="org.xephira.lab"
+                android:targetClass="org.xephira.lab.XephiraLabActivity" />
+        </com.android.settings.widget.HomepagePreference>
+    </PreferenceCategory>
+
     <PreferenceCategory
         android:order="-140"
         android:key="top_level_account_category"
