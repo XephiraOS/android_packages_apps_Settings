@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 XephiraOS Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="12dp"
+    android:padding="22dp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/bg_settings_glass_card"
+    android:clipToOutline="true">
+
+    <!-- Glowing XephiraOS Core Emblem -->
+    <ImageView
+        android:id="@+id/xephira_about_emblem"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="12dp"
+        android:src="@drawable/ic_xephira_emblem"
+        android:contentDescription="@null" />
+
+    <!-- OS Title -->
+    <TextView
+        android:id="@+id/xephira_about_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="XephiraOS"
+        android:textColor="@color/xephira_color_white"
+        android:textSize="24sp"
+        android:fontFamily="@*android:string/config_headlineFontFamily"
+        android:textStyle="bold"
+        android:letterSpacing="0.03" />
+
+    <!-- Version & Edition Subtitle -->
+    <TextView
+        android:id="@+id/xephira_about_edition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="1.0-Aether • OxygenOS 17 Engine"
+        android:textColor="@color/xephira_neon_cyan"
+        android:textSize="13sp"
+        android:letterSpacing="0.04"
+        android:textStyle="bold" />
+
+    <!-- Dynamic Device Name Pill -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp"
+        android:background="@drawable/bg_settings_glass_pill"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/xephira_about_device_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Flagship Silicon"
+            android:textColor="@color/xephira_glass_text_primary"
+            android:textSize="13sp"
+            android:fontFamily="@*android:string/config_headlineFontFamily"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="3dp"
+            android:layout_height="3dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/circle"
+            android:backgroundTint="@color/xephira_glass_text_muted" />
+
+        <TextView
+            android:id="@+id/xephira_about_android_ver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Android 16"
+            android:textColor="@color/xephira_crimson_red"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

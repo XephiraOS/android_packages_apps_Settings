@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 XephiraOS Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="16dp"
+    android:orientation="vertical">
+
+    <!-- Row 1: SoC Engine & RAM Matrix -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <!-- Tile 1: SoC Silicon Engine -->
+        <LinearLayout
+            android:id="@+id/tile_soc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="5dp"
+            android:minHeight="110dp"
+            android:padding="16dp"
+            android:background="@drawable/bg_hardware_tile_glass"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_settings_memory"
+                    android:tint="@color/xephira_neon_cyan"
+                    android:contentDescription="@null" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="PROCESSOR"
+                    android:textColor="@color/xephira_glass_text_muted"
+                    android:textSize="10sp"
+                    android:letterSpacing="0.08"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/xephira_hw_soc_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Octa-Core Silicon"
+                android:textColor="@color/xephira_color_white"
+                android:textSize="14sp"
+                android:fontFamily="@*android:string/config_headlineFontFamily"
+                android:textStyle="bold"
+                android:singleLine="true"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/xephira_hw_soc_sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="64-bit • Hexagon NPU"
+                android:textColor="@color/xephira_glass_text_secondary"
+                android:textSize="11sp"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <!-- Tile 2: RAM & Virtual Expansion -->
+        <LinearLayout
+            android:id="@+id/tile_ram"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="5dp"
+            android:minHeight="110dp"
+            android:padding="16dp"
+            android:background="@drawable/bg_hardware_tile_glass"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_settings_memory"
+                    android:tint="@color/xephira_amethyst_purple"
+                    android:contentDescription="@null" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="RAM &amp; BOOST"
+                    android:textColor="@color/xephira_glass_text_muted"
+                    android:textSize="10sp"
+                    android:letterSpacing="0.08"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/xephira_hw_ram_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="12 GB LPDDR5X"
+                android:textColor="@color/xephira_color_white"
+                android:textSize="14sp"
+                android:fontFamily="@*android:string/config_headlineFontFamily"
+                android:textStyle="bold"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/xephira_hw_ram_boost_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="+ 12 GB Liquid Boost"
+                android:textColor="@color/xephira_aurora_green"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:singleLine="true" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Row 2: Storage Intelligence & Silicon Battery -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <!-- Tile 3: Storage Intelligence -->
+        <LinearLayout
+            android:id="@+id/tile_storage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="5dp"
+            android:minHeight="110dp"
+            android:padding="16dp"
+            android:background="@drawable/bg_hardware_tile_glass"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_homepage_storage"
+                    android:contentDescription="@null" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="STORAGE"
+                    android:textColor="@color/xephira_glass_text_muted"
+                    android:textSize="10sp"
+                    android:letterSpacing="0.08"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/xephira_hw_storage_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="256 GB UFS 4.0"
+                android:textColor="@color/xephira_color_white"
+                android:textSize="14sp"
+                android:fontFamily="@*android:string/config_headlineFontFamily"
+                android:textStyle="bold"
+                android:singleLine="true" />
+
+            <!-- Segmented Liquid Progress -->
+            <ProgressBar
+                android:id="@+id/xephira_hw_storage_bar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="4dp"
+                android:max="100"
+                android:progress="45"
+                android:progressDrawable="@drawable/bg_liquid_progress_bar" />
+
+            <TextView
+                android:id="@+id/xephira_hw_storage_free_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="140 GB Available"
+                android:textColor="@color/xephira_glass_text_secondary"
+                android:textSize="11sp"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <!-- Tile 4: Battery & Silicon Health -->
+        <LinearLayout
+            android:id="@+id/tile_battery"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="5dp"
+            android:minHeight="110dp"
+            android:padding="16dp"
+            android:background="@drawable/bg_hardware_tile_glass"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_homepage_battery"
+                    android:contentDescription="@null" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="BATTERY &amp; SILICON"
+                    android:textColor="@color/xephira_glass_text_muted"
+                    android:textSize="10sp"
+                    android:letterSpacing="0.08"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/xephira_hw_battery_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="5400 mAh"
+                android:textColor="@color/xephira_color_white"
+                android:textSize="14sp"
+                android:fontFamily="@*android:string/config_headlineFontFamily"
+                android:textStyle="bold"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/xephira_hw_battery_health_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="SUPERVOOC • 99% Health"
+                android:textColor="@color/xephira_amber_gold"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:singleLine="true" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

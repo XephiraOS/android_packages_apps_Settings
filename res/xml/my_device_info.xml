@@ -27,6 +27,22 @@
         android:selectable="false"
         settings:isPreferenceVisible="false"/>
 
+    <!-- XephiraOS OxygenOS 17 & iOS 18 Spatial Glass Hero Card -->
+    <com.android.settingslib.widget.LayoutPreference
+        android:key="xephira_about_hero"
+        android:order="-1000"
+        android:layout="@layout/xephira_about_hero"
+        android:selectable="false"
+        settings:controller="com.android.settings.deviceinfo.aboutphone.XephiraAboutDashboardController" />
+
+    <!-- 2x2 Flux Hardware Matrix (SoC, RAM Boost, Storage Intelligence, Battery) -->
+    <com.android.settingslib.widget.LayoutPreference
+        android:key="xephira_about_hardware_matrix"
+        android:order="-990"
+        android:layout="@layout/xephira_about_hardware_matrix"
+        android:selectable="false"
+        settings:controller="com.android.settings.deviceinfo.aboutphone.XephiraAboutDashboardController" />
+
     <PreferenceCategory
         android:key="basic_info_category"
         android:selectable="false"
