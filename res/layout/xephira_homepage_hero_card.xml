@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 XephiraOS Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/xephira_card_margin_horizontal"
+    android:paddingEnd="@dimen/xephira_card_margin_horizontal"
+    android:paddingTop="6dp"
+    android:paddingBottom="12dp">
+
+    <LinearLayout
+        android:id="@+id/xephira_hero_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_settings_glass_card"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:paddingTop="18dp"
+        android:paddingBottom="18dp"
+        android:clickable="true"
+        android:focusable="true">
+
+        <!-- Glowing Xephira Emblem / Avatar Circle -->
+        <FrameLayout
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="@drawable/bg_settings_glass_pill">
+
+            <ImageView
+                android:id="@+id/xephira_hero_icon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_settings_about"
+                android:tint="@color/xephira_crimson_red" />
+        </FrameLayout>
+
+        <!-- Device & Identity Info -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/xephira_hero_device_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Xephira Phone"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="?android:attr/textColorPrimary"
+                android:letterSpacing="-0.01" />
+
+            <TextView
+                android:id="@+id/xephira_hero_version_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="XephiraOS 1.0 • Aether Edition"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif"
+                android:textColor="@color/xephira_crimson_red"
+                android:letterSpacing="0.01" />
+        </LinearLayout>
+
+        <!-- Forward Navigation Chevron -->
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_chevron_right_24dp"
+            android:tint="?android:attr/textColorSecondary" />
+
+    </LinearLayout>
+</FrameLayout>
