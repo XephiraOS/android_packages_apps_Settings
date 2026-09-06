@@ -34,11 +34,11 @@
 
             <ImageView
                 android:id="@+id/xephira_hero_icon"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_settings_about"
-                android:tint="@color/xephira_crimson_red" />
+                android:src="@drawable/ic_xephira_logo"
+                android:contentDescription="@null" />
         </FrameLayout>
 
         <!-- Device & Identity Info -->
