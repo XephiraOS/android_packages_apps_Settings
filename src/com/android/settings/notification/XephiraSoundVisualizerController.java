@@ -10,6 +10,7 @@ import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.preference.Preference;
@@ -18,8 +19,6 @@ import androidx.preference.PreferenceScreen;
 import com.android.settings.R;
 import com.android.settings.core.BasePreferenceController;
 import com.android.settingslib.widget.LayoutPreference;
-
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Controller for XephiraOS Spatial Sound Visualizer Hero Card.
@@ -91,14 +90,14 @@ public class XephiraSoundVisualizerController extends BasePreferenceController
     }
 
     @Override
-    public void onResume(@NotNull LifecycleOwner owner) {
+    public void onResume(@NonNull LifecycleOwner owner) {
         if (mVisualizerView != null) {
             mVisualizerView.start();
         }
     }
 
     @Override
-    public void onPause(@NotNull LifecycleOwner owner) {
+    public void onPause(@NonNull LifecycleOwner owner) {
         if (mVisualizerView != null) {
             mVisualizerView.stop();
         }
