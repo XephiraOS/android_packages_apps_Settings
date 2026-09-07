@@ -74,7 +74,7 @@ public class XephiraAboutDashboardController extends BasePreferenceController {
         final TextView editionView = root.findViewById(R.id.xephira_about_edition);
         if (editionView != null) {
             String xephiraVer = SystemProperties.get("ro.xephira.version", "1.0-Aether");
-            editionView.setText(xephiraVer + " • OxygenOS 17 Engine");
+            editionView.setText(xephiraVer + " • Official Edition");
         }
 
         final TextView androidVerView = root.findViewById(R.id.xephira_about_android_ver);

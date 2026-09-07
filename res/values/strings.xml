@@ -14950,7 +14950,7 @@
     <!-- Safety Center system component update search terms [CHAR LIMIT=NONE] -->
     <string name="safety_center_system_component_update_search_terms"></string>
 
-    <!-- XephiraOS OxygenOS 17 & iOS 18 Customization Suite -->
+    <!-- XephiraOS Customization Suite -->
     <string name="xephira_lab_title">Xephira Lab</string>
-    <string name="xephira_lab_summary">OxygenOS 17 &amp; iOS 18 Spatial Liquid Glass Studio</string>
+    <string name="xephira_lab_summary">Spatial Liquid Glass Customization Studio</string>
 </resources>

@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
-                android:text="XephiraOS 1.0 • OxygenOS 17 Engine"
+                android:text="XephiraOS 1.0 • Aether Edition"
                 android:textSize="12sp"
                 android:textColor="@color/xephira_neon_cyan"
                 android:letterSpacing="0.02" />

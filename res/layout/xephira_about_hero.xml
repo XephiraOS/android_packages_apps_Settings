@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
-        android:text="1.0-Aether • OxygenOS 17 Engine"
+        android:text="1.0-Aether • Official Edition"
         android:textColor="@color/xephira_neon_cyan"
         android:textSize="13sp"
         android:letterSpacing="0.04"
