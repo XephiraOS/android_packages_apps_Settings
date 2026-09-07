@@ -127,11 +127,22 @@
                 android:textStyle="bold"
                 android:singleLine="true" />
 
+            <!-- Segmented Liquid RAM Utilization Bar -->
+            <ProgressBar
+                android:id="@+id/xephira_hw_ram_bar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="4dp"
+                android:max="100"
+                android:progress="38"
+                android:progressDrawable="@drawable/bg_liquid_progress_bar_ram" />
+
             <TextView
                 android:id="@+id/xephira_hw_ram_boost_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
                 android:text="+ 12 GB Liquid Boost"
                 android:textColor="@color/xephira_aurora_green"
                 android:textSize="11sp"
@@ -264,11 +275,22 @@
                 android:textStyle="bold"
                 android:singleLine="true" />
 
+            <!-- Segmented Liquid Battery Level Bar -->
+            <ProgressBar
+                android:id="@+id/xephira_hw_battery_bar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="4dp"
+                android:max="100"
+                android:progress="92"
+                android:progressDrawable="@drawable/bg_liquid_progress_bar" />
+
             <TextView
                 android:id="@+id/xephira_hw_battery_health_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
                 android:text="SUPERVOOC • 99% Health"
                 android:textColor="@color/xephira_amber_gold"
                 android:textSize="11sp"

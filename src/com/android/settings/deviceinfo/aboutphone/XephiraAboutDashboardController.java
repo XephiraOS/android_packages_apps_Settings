@@ -93,12 +93,16 @@ public class XephiraAboutDashboardController extends BasePreferenceController {
         // Tile 2: RAM & Virtual Expansion
         final TextView ramTextView = root.findViewById(R.id.xephira_hw_ram_text);
         final TextView ramBoostView = root.findViewById(R.id.xephira_hw_ram_boost_text);
+        final ProgressBar ramBar = root.findViewById(R.id.xephira_hw_ram_bar);
         if (ramTextView != null) {
             long totalRamGb = getTotalRamGb();
             ramTextView.setText(totalRamGb + " GB LPDDR5X");
         }
         if (ramBoostView != null) {
             ramBoostView.setText("+ 12 GB Liquid Boost");
+        }
+        if (ramBar != null) {
+            ramBar.setProgress(getRamUsedPercent());
         }
 
         // Tile 3: Storage Intelligence
@@ -112,13 +116,46 @@ public class XephiraAboutDashboardController extends BasePreferenceController {
         // Tile 4: Battery & Silicon Health
         final TextView batteryTextView = root.findViewById(R.id.xephira_hw_battery_text);
         final TextView batteryHealthView = root.findViewById(R.id.xephira_hw_battery_health_text);
+        final ProgressBar batteryBar = root.findViewById(R.id.xephira_hw_battery_bar);
         if (batteryTextView != null) {
             int batteryCap = getBatteryCapacityMah();
             batteryTextView.setText(batteryCap + " mAh");
         }
+        if (batteryBar != null) {
+            batteryBar.setProgress(getBatteryLevel());
+        }
         if (batteryHealthView != null) {
             batteryHealthView.setText("SUPERVOOC • 99% Health");
         }
+    }
+
+    private int getRamUsedPercent() {
+        ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        if (am != null) {
+            ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
+            am.getMemoryInfo(memInfo);
+            if (memInfo.totalMem > 0) {
+                long used = memInfo.totalMem - memInfo.availMem;
+                return (int) Math.min(100, Math.max(0, (used * 100) / memInfo.totalMem));
+            }
+        }
+        return 42;
+    }
+
+    private int getBatteryLevel() {
+        try {
+            android.content.Intent batteryIntent = mContext.registerReceiver(
+                    null, new android.content.IntentFilter(android.content.Intent.ACTION_BATTERY_CHANGED));
+            if (batteryIntent != null) {
+                int level = batteryIntent.getIntExtra(android.os.BatteryManager.EXTRA_LEVEL, -1);
+                int scale = batteryIntent.getIntExtra(android.os.BatteryManager.EXTRA_SCALE, -1);
+                if (level >= 0 && scale > 0) {
+                    return Math.min(100, Math.max(0, (level * 100) / scale));
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return 85;
     }
 
     private String getProcessorName() {

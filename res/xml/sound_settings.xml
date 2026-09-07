@@ -21,6 +21,13 @@
     android:key="sound_settings"
     settings:keywords="@string/keywords_sounds">
 
+    <!-- XephiraOS Spatial Sound & Animated Audio Visualizer Hero -->
+    <com.android.settingslib.widget.LayoutPreference
+        android:key="xephira_sound_visualizer_hero"
+        android:order="-200"
+        android:layout="@layout/xephira_sound_visualizer_hero"
+        settings:controller="com.android.settings.notification.XephiraSoundVisualizerController" />
+
     <!-- Remote volume group -->
     <PreferenceCategory
         android:key="remote_media_group"

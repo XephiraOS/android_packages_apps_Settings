@@ -16,14 +16,21 @@
     android:background="@drawable/bg_settings_glass_card"
     android:clipToOutline="true">
 
-    <!-- Glowing XephiraOS Core Emblem -->
-    <ImageView
-        android:id="@+id/xephira_about_emblem"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+    <!-- Ambient Radiant Halo Container with Xephira Emblem -->
+    <FrameLayout
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:layout_marginBottom="12dp"
-        android:src="@drawable/ic_xephira_emblem"
-        android:contentDescription="@null" />
+        android:background="@drawable/bg_xephira_halo_pulse">
+
+        <ImageView
+            android:id="@+id/xephira_about_emblem"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_xephira_emblem"
+            android:contentDescription="@null" />
+    </FrameLayout>
 
     <!-- OS Title -->
     <TextView
@@ -87,6 +94,56 @@
             android:text="Android 16"
             android:textColor="@color/xephira_crimson_red"
             android:textSize="13sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Professional Security & Fluidity Chips -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_settings_glass_pill"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="Official Stable"
+            android:textColor="@color/xephira_aurora_green"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/bg_settings_glass_pill"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="SELinux Enforcing"
+            android:textColor="@color/xephira_glass_text_secondary"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/bg_settings_glass_pill"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="120Hz Fluidity"
+            android:textColor="@color/xephira_neon_cyan"
+            android:textSize="10sp"
             android:textStyle="bold" />
     </LinearLayout>
 

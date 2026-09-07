@@ -60,12 +60,41 @@ public class XephiraHomepageHeroController extends BasePreferenceController {
                     versionSubtitleView.setText(xephiraVersion);
                 }
 
+                TextView batteryPillView = root.findViewById(R.id.xephira_hero_battery_pill);
+                TextView securityPillView = root.findViewById(R.id.xephira_hero_security_pill);
+
+                if (batteryPillView != null) {
+                    int batteryLevel = getBatteryLevel();
+                    batteryPillView.setText(batteryLevel + "% • Optimized");
+                }
+
+                if (securityPillView != null) {
+                    securityPillView.setText("Shield Protected");
+                }
+
                 root.setOnClickListener(v -> {
+                    v.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP);
                     Intent intent = new Intent(Settings.ACTION_DEVICE_INFO_SETTINGS);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);
                 });
             }
         }
+    }
+
+    private int getBatteryLevel() {
+        try {
+            android.content.Intent batteryIntent = mContext.registerReceiver(
+                    null, new android.content.IntentFilter(android.content.Intent.ACTION_BATTERY_CHANGED));
+            if (batteryIntent != null) {
+                int level = batteryIntent.getIntExtra(android.os.BatteryManager.EXTRA_LEVEL, -1);
+                int scale = batteryIntent.getIntExtra(android.os.BatteryManager.EXTRA_SCALE, -1);
+                if (level >= 0 && scale > 0) {
+                    return Math.min(100, Math.max(0, (level * 100) / scale));
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return 92;
     }
 }
