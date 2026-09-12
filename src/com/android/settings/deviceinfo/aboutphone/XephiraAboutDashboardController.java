@@ -8,6 +8,7 @@ package com.android.settings.deviceinfo.aboutphone;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
