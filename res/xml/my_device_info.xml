@@ -27,6 +27,13 @@
         android:selectable="false"
         settings:isPreferenceVisible="false"/>
 
+    <!-- Xephira Pure Liquid Glass Hero Section -->
+    <com.android.settings.spa.preference.ComposePreference
+        android:key="xephira_about_hero"
+        android:order="-100"
+        android:selectable="false"
+        settings:controller="com.android.settings.deviceinfo.aboutphone.XephiraAboutHeaderPreferenceController"/>
+
     <PreferenceCategory
         android:key="basic_info_category"
         android:selectable="false"
