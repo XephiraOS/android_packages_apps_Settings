@@ -20,6 +20,11 @@
     xmlns:settings="http://schemas.android.com/apk/res-auto"
     android:key="top_level_settings">
 
+    <com.android.settings.spa.preference.ComposePreference
+        android:key="top_level_xephira_dashboard"
+        android:order="-2000"
+        settings:controller="com.android.settings.homepage.liquidglass.XephiraSettingsDashboardPreferenceController"/>
+
     <PreferenceCategory
         android:order="-140"
         android:key="top_level_account_category"
