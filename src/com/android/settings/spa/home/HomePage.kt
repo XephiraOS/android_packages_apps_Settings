@@ -28,9 +28,20 @@ import com.android.settingslib.spa.framework.common.SettingsPageProvider
 import com.android.settingslib.spa.framework.common.SpaEnvironmentFactory
 import com.android.settingslib.spa.framework.common.createSettingsPage
 
+import androidx.compose.runtime.Composable
+import com.android.settings.homepage.liquidglass.XephiraSettingsDashboard
+import com.android.settingslib.spa.widget.scaffold.RegularScaffold
+
 object HomePageProvider : SettingsPageProvider {
     override val name = "Home"
     private val owner = createSettingsPage()
+
+    @Composable
+    override fun Page(arguments: Bundle?) {
+        RegularScaffold(title = getTitle(arguments)) {
+            XephiraSettingsDashboard()
+        }
+    }
 
     override fun isEnabled(arguments: Bundle?) = false
 
