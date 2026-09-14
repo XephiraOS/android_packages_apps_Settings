@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.android.settings.R
+import com.android.settings.deviceinfo.aboutphone.XephiraAboutHeader
 import com.android.settingslib.spa.framework.common.SettingsEntryBuilder
 import com.android.settingslib.spa.framework.common.SettingsPageProvider
 import com.android.settingslib.spa.framework.common.SpaEnvironmentFactory
@@ -41,6 +42,7 @@ object AboutPhonePageProvider : SettingsPageProvider {
     @Composable
     override fun Page(arguments: Bundle?) {
         RegularScaffold(title = getTitle(arguments)) {
+            XephiraAboutHeader()
             BasicInfoCategory.CategoryItems()
         }
     }
