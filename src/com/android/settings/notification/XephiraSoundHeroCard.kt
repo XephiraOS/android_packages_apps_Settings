@@ -41,7 +41,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -76,7 +79,7 @@ fun XephiraSoundHeroCard() {
     val audioManager = remember { context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager }
     val maxVol = remember { (audioManager?.getStreamMaxVolume(AudioManager.STREAM_MUSIC) ?: 15).toFloat() }
     val currentVol = remember { (audioManager?.getStreamVolume(AudioManager.STREAM_MUSIC) ?: 10).toFloat() }
-    var volumeValue by remember { androidx.compose.runtime.mutableFloatStateOf(currentVol) }
+    var volumeValue by remember { mutableFloatStateOf(currentVol) }
 
     Box(
         modifier = Modifier

@@ -21,6 +21,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -89,8 +91,8 @@ fun XephiraBatteryHeroCard() {
                 refraction = 14f,
                 isDark = isDark
             )
-            .androidx.compose.foundation.clickable(
-                interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
                 haptics.gesturePulse()
