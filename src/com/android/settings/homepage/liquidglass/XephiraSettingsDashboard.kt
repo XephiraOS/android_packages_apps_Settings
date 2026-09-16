@@ -18,15 +18,22 @@ package com.android.settings.homepage.liquidglass
 
 import android.app.Activity
 import android.app.settings.SettingsEnums
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.wifi.WifiInfo
+import android.net.wifi.WifiManager
 import android.os.BatteryManager
 import android.os.Build
 import android.os.Environment
 import android.os.StatFs
 import android.os.SystemProperties
+import android.os.storage.StorageManager
 import android.provider.Settings
 import android.util.Log
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -67,6 +74,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -86,6 +94,7 @@ import androidx.compose.ui.unit.sp
 import com.android.settings.R
 import com.android.settings.SubSettings
 import com.android.settings.activityembedding.ActivityEmbeddingRulesController
+import com.android.settings.core.SubSettingLauncher
 import com.android.settings.deviceinfo.aboutphone.XephiraPerformanceHUD
 import com.android.settings.overlay.FeatureFactory
 import com.android.settings.search.SearchFeatureProvider
@@ -115,9 +124,46 @@ fun XephiraSettingsDashboard(
     val androidVersion = remember { SystemProperties.get("ro.xephira.android.version", "16") }
     val buildType = remember { SystemProperties.get("ro.xephira.buildtype", "OFFICIAL") }
 
-    // Live device metrics for status pills
-    val batteryPct = remember { getBatteryPercentage(context) }
-    val storage = remember { getStorageDetails() }
+    // Live device metrics for status pills with reactive dynamic updates
+    var wifiState by remember { mutableStateOf(getWifiLiveState(context)) }
+    var batteryState by remember { mutableStateOf(getBatteryLiveState(context)) }
+    var storageState by remember { mutableStateOf(getStorageLiveDetails(context)) }
+
+    DisposableEffect(context) {
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(c: Context?, intent: Intent?) {
+                when (intent?.action) {
+                    Intent.ACTION_BATTERY_CHANGED,
+                    Intent.ACTION_POWER_CONNECTED,
+                    Intent.ACTION_POWER_DISCONNECTED -> {
+                        batteryState = getBatteryLiveState(context)
+                    }
+                    WifiManager.NETWORK_STATE_CHANGED_ACTION,
+                    WifiManager.WIFI_STATE_CHANGED_ACTION,
+                    ConnectivityManager.CONNECTIVITY_ACTION -> {
+                        wifiState = getWifiLiveState(context)
+                    }
+                }
+            }
+        }
+        val filter = IntentFilter().apply {
+            addAction(Intent.ACTION_BATTERY_CHANGED)
+            addAction(Intent.ACTION_POWER_CONNECTED)
+            addAction(Intent.ACTION_POWER_DISCONNECTED)
+            addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION)
+            addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
+            addAction(ConnectivityManager.CONNECTIVITY_ACTION)
+        }
+        try {
+            context.registerReceiver(receiver, filter)
+        } catch (ignored: Throwable) {}
+
+        onDispose {
+            try {
+                context.unregisterReceiver(receiver)
+            } catch (ignored: Throwable) {}
+        }
+    }
 
     // Telemetry easter egg state
     var showPerformanceHUD by remember { mutableStateOf(false) }
@@ -144,8 +190,8 @@ fun XephiraSettingsDashboard(
         // ─── 2. QUICK ACTION SUGGESTION CHIPS ─────────────────────
         LiquidGlassQuickChipsRow(
             isDark = isDark,
-            batteryPct = batteryPct,
-            storageFreeGb = storage.freeGb,
+            batteryState = batteryState,
+            storageState = storageState,
             onChipClick = { target ->
                 haptics.lightClick()
                 when (target) {
@@ -183,11 +229,21 @@ fun XephiraSettingsDashboard(
             xephiraVersion = xephiraVersion,
             androidVersion = androidVersion,
             buildType = buildType,
-            batteryPct = batteryPct,
-            storage = storage,
+            batteryState = batteryState,
+            wifiState = wifiState,
+            storageState = storageState,
             isDark = isDark,
             onHeroClick = {
-                launchIntent(context, Settings.ACTION_DEVICE_INFO_SETTINGS, "com.android.settings.deviceinfo.aboutphone.MyDeviceInfoFragment")
+                haptics.heavyClick()
+                launchSystemUpdate(context)
+            },
+            onVersionClick = {
+                haptics.heavyClick()
+                launchSystemUpdate(context)
+            },
+            onSubtitleClick = {
+                haptics.lightClick()
+                launchAboutPhone(context)
             },
             onLogoEasterEgg = {
                 showPerformanceHUD = true
@@ -222,8 +278,8 @@ fun XephiraSettingsDashboard(
                 iconRes = R.drawable.ic_settings_wireless_filled,
                 gradientColors = listOf(Color(0xFF007AFF), Color(0xFF00C6FF)),
                 title = "Network & internet",
-                subtitle = "Mobile, Wi-Fi, hotspot, SIMs",
-                badge = "Connected",
+                subtitle = if (wifiState.isConnected) "Connected • ${wifiState.ssid}" else if (wifiState.isEnabled) "Wi-Fi, mobile, hotspot, SIMs" else "Wi-Fi Off • Mobile, hotspot",
+                badge = if (wifiState.isConnected) "Connected" else if (wifiState.isEnabled) "Available" else "Off",
                 isDark = isDark,
                 onClick = {
                     launchIntent(context, Settings.ACTION_WIRELESS_SETTINGS, "com.android.settings.network.NetworkDashboardFragment")
@@ -273,8 +329,8 @@ fun XephiraSettingsDashboard(
                 iconRes = R.drawable.ic_settings_battery_filled,
                 gradientColors = listOf(Color(0xFFFF9500), Color(0xFFFFB340)),
                 title = "Battery",
-                subtitle = "$batteryPct% • Adaptive charging",
-                badge = "$batteryPct%",
+                subtitle = "${batteryState.statusText} • Adaptive charging",
+                badge = batteryState.statusText,
                 isDark = isDark,
                 onClick = {
                     launchIntent(context, Intent.ACTION_POWER_USAGE_SUMMARY, "com.android.settings.fuelgauge.PowerUsageSummary")
@@ -285,8 +341,8 @@ fun XephiraSettingsDashboard(
                 iconRes = R.drawable.ic_storage_filled,
                 gradientColors = listOf(Color(0xFF34C759), Color(0xFF30D158)),
                 title = "Storage",
-                subtitle = storage.summary,
-                badge = "${storage.freeGb} GB Free",
+                subtitle = storageState.summary,
+                badge = storageState.statusText,
                 isDark = isDark,
                 onClick = {
                     launchIntent(context, Settings.ACTION_INTERNAL_STORAGE_SETTINGS, "com.android.settings.deviceinfo.StorageDashboardFragment")
@@ -426,7 +482,7 @@ fun XephiraSettingsDashboard(
                 badge = "v$xephiraVersion",
                 isDark = isDark,
                 onClick = {
-                    launchIntent(context, Settings.ACTION_DEVICE_INFO_SETTINGS, "com.android.settings.deviceinfo.aboutphone.MyDeviceInfoFragment")
+                    launchAboutPhone(context)
                 }
             )
         }
@@ -548,8 +604,8 @@ private enum class QuickChipTarget {
 @Composable
 private fun LiquidGlassQuickChipsRow(
     isDark: Boolean,
-    batteryPct: Int,
-    storageFreeGb: Int,
+    batteryState: BatteryLiveState,
+    storageState: StorageLiveDetails,
     onChipClick: (QuickChipTarget) -> Unit
 ) {
     val scrollState = rememberScrollState()
@@ -570,7 +626,7 @@ private fun LiquidGlassQuickChipsRow(
 
         // Chip 2: Battery
         LiquidChipItem(
-            text = "⚡ Battery $batteryPct%",
+            text = "⚡ Battery ${batteryState.statusText}",
             isAccent = false,
             isDark = isDark,
             onClick = { onChipClick(QuickChipTarget.BATTERY) }
@@ -586,7 +642,7 @@ private fun LiquidGlassQuickChipsRow(
 
         // Chip 4: Storage
         LiquidChipItem(
-            text = "💾 ${storageFreeGb}GB Free",
+            text = "💾 ${storageState.freeGb}GB Free",
             isAccent = false,
             isDark = isDark,
             onClick = { onChipClick(QuickChipTarget.STORAGE) }
@@ -667,10 +723,13 @@ private fun LiquidGlassHeroBanner(
     xephiraVersion: String,
     androidVersion: String,
     buildType: String,
-    batteryPct: Int,
-    storage: StorageDetails,
+    batteryState: BatteryLiveState,
+    wifiState: WifiLiveState,
+    storageState: StorageLiveDetails,
     isDark: Boolean = isSystemInDarkTheme(),
     onHeroClick: () -> Unit,
+    onVersionClick: () -> Unit,
+    onSubtitleClick: () -> Unit,
     onLogoEasterEgg: () -> Unit,
     onBatteryClick: () -> Unit,
     onStorageClick: () -> Unit,
@@ -773,12 +832,24 @@ private fun LiquidGlassHeroBanner(
                             text = "XephiraOS $xephiraVersion",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = if (isDark) Color.White else Color(0xFF0F172A)
+                            color = if (isDark) Color.White else Color(0xFF0F172A),
+                            modifier = Modifier.clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) {
+                                onVersionClick()
+                            }
                         )
                         Surface(
                             shape = CircleShape,
                             color = if (isDark) Color(0x22FFFFFF) else Color(0x12000000),
-                            border = BorderStroke(1.dp, if (isDark) Color(0x40FFFFFF) else Color(0x24000000))
+                            border = BorderStroke(1.dp, if (isDark) Color(0x40FFFFFF) else Color(0x24000000)),
+                            modifier = Modifier.clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) {
+                                onVersionClick()
+                            }
                         ) {
                             Text(
                                 text = buildType,
@@ -795,7 +866,13 @@ private fun LiquidGlassHeroBanner(
                     Text(
                         text = "Android $androidVersion • ${Build.MODEL}",
                         fontSize = 12.sp,
-                        color = if (isDark) Color(0xFFD1D5DB) else Color(0xFF475569)
+                        color = if (isDark) Color(0xFFD1D5DB) else Color(0xFF475569),
+                        modifier = Modifier.clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            onSubtitleClick()
+                        }
                     )
                 }
 
@@ -818,9 +895,9 @@ private fun LiquidGlassHeroBanner(
                 modifier = Modifier.weight(1f),
                 iconRes = R.drawable.ic_settings_wireless_filled,
                 label = "Wi-Fi",
-                status = "Connected",
-                progress = 1.0f,
-                accentColor = Color(0xFF34C759),
+                status = wifiState.statusText,
+                progress = wifiState.progress,
+                accentColor = wifiState.accentColor,
                 isDark = isDark,
                 onClick = onWifiClick
             )
@@ -829,10 +906,10 @@ private fun LiquidGlassHeroBanner(
             LiquidGlassStatusPill(
                 modifier = Modifier.weight(1f),
                 iconRes = R.drawable.ic_settings_battery_filled,
-                label = "Battery",
-                status = "$batteryPct%",
-                progress = (batteryPct / 100f).coerceIn(0.05f, 1f),
-                accentColor = if (batteryPct > 20) Color(0xFF34C759) else Color(0xFFFF3B30),
+                label = if (batteryState.isCharging) "Charging" else "Battery",
+                status = batteryState.statusText,
+                progress = batteryState.progress,
+                accentColor = batteryState.accentColor,
                 isDark = isDark,
                 onClick = onBatteryClick
             )
@@ -842,9 +919,9 @@ private fun LiquidGlassHeroBanner(
                 modifier = Modifier.weight(1f),
                 iconRes = R.drawable.ic_storage_filled,
                 label = "Storage",
-                status = "${storage.freeGb} GB Free",
-                progress = (storage.usedGb.toFloat() / storage.totalGb.coerceAtLeast(1).toFloat()).coerceIn(0.05f, 1f),
-                accentColor = Color(0xFF007AFF),
+                status = storageState.statusText,
+                progress = storageState.progress,
+                accentColor = storageState.accentColor,
                 isDark = isDark,
                 onClick = onStorageClick
             )
@@ -1244,48 +1321,292 @@ private fun launchSettingsSearch(context: Context) {
 private fun launchIntent(context: Context, action: String, fragmentClass: String?) {
     if (fragmentClass != null) {
         try {
-            val subSettingIntent = Intent(context, SubSettings::class.java).apply {
-                putExtra(":settings:show_fragment", fragmentClass)
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
-            context.startActivity(subSettingIntent)
+            SubSettingLauncher(context)
+                .setDestination(fragmentClass)
+                .setSourceMetricsCategory(SettingsEnums.SETTINGS_HOMEPAGE)
+                .launch()
             return
-        } catch (ignored: Exception) {}
+        } catch (e: Throwable) {
+            Log.w("XephiraSettings", "SubSettingLauncher failed for $fragmentClass, trying Intent fallback", e)
+        }
     }
     try {
         val intent = Intent(action).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
         context.startActivity(intent)
-    } catch (ignored: Exception) {}
-}
-
-private fun getBatteryPercentage(context: Context): Int {
-    return try {
-        val bm = context.getSystemService(Context.BATTERY_SERVICE) as? BatteryManager
-        bm?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY) ?: 85
     } catch (e: Throwable) {
-        85
+        Log.e("XephiraSettings", "Failed to launch intent $action", e)
     }
 }
 
-data class StorageDetails(
+private fun launchSystemUpdate(context: Context) {
+    // 1. Try dedicated LineageOS / XephiraOS Updater components
+    val explicitIntents = listOf(
+        Intent().setComponent(android.content.ComponentName("org.lineageos.updater", "org.lineageos.updater.UpdatesActivity")),
+        Intent("org.lineageos.updater.action.UPDATER"),
+        Intent(Settings.ACTION_SYSTEM_UPDATE_SETTINGS)
+    )
+
+    for (intent in explicitIntents) {
+        try {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            val resolveInfo = context.packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+            if (resolveInfo != null) {
+                context.startActivity(intent)
+                return
+            }
+        } catch (ignored: Throwable) {}
+    }
+
+    // 2. Try SystemUpdateRepository
+    try {
+        val repoIntent = com.android.settings.system.SystemUpdateRepository(context).getSystemUpdateIntent()
+        if (repoIntent != null) {
+            repoIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(repoIntent)
+            return
+        }
+    } catch (ignored: Throwable) {}
+
+    // 3. Try SystemDashboardFragment
+    try {
+        SubSettingLauncher(context)
+            .setDestination("com.android.settings.system.SystemDashboardFragment")
+            .setSourceMetricsCategory(SettingsEnums.SETTINGS_HOMEPAGE)
+            .launch()
+        return
+    } catch (ignored: Throwable) {}
+
+    // 4. Fallback to About Phone
+    launchAboutPhone(context)
+}
+
+private fun launchAboutPhone(context: Context) {
+    try {
+        SubSettingLauncher(context)
+            .setDestination("com.android.settings.deviceinfo.aboutphone.MyDeviceInfoFragment")
+            .setSourceMetricsCategory(SettingsEnums.SETTINGS_HOMEPAGE)
+            .launch()
+        return
+    } catch (ignored: Throwable) {}
+
+    try {
+        val intent = Intent(Settings.ACTION_DEVICE_INFO_SETTINGS).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        context.startActivity(intent)
+    } catch (e: Throwable) {
+        Log.e("XephiraSettings", "Failed to launch about phone", e)
+    }
+}
+
+data class WifiLiveState(
+    val isEnabled: Boolean,
+    val isConnected: Boolean,
+    val ssid: String,
+    val signalLevel: Int,
+    val progress: Float,
+    val statusText: String,
+    val accentColor: Color
+)
+
+private fun getWifiLiveState(context: Context): WifiLiveState {
+    return try {
+        val wm = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+
+        val isEnabled = wm?.isWifiEnabled == true
+        if (!isEnabled) {
+            return WifiLiveState(
+                isEnabled = false,
+                isConnected = false,
+                ssid = "",
+                signalLevel = 0,
+                progress = 0.0f,
+                statusText = "Off",
+                accentColor = Color(0xFF8E8E93)
+            )
+        }
+
+        val network = cm?.activeNetwork
+        val caps = if (network != null) cm.getNetworkCapabilities(network) else null
+        val isWifi = caps?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true
+
+        if (isWifi) {
+            val wifiInfo = (caps?.transportInfo as? WifiInfo) ?: wm?.connectionInfo
+            val rawSsid = wifiInfo?.ssid
+            val cleanSsid = rawSsid?.replace("\"", "")?.trim()
+            val finalSsid = if (!cleanSsid.isNullOrEmpty() && cleanSsid != "<unknown ssid>") {
+                cleanSsid
+            } else {
+                "Connected"
+            }
+
+            val rssi = wifiInfo?.rssi ?: -60
+            val level = try {
+                if (wm != null) {
+                    wm.calculateSignalLevel(rssi)
+                } else {
+                    WifiManager.calculateSignalLevel(rssi, 5)
+                }
+            } catch (ignored: Throwable) {
+                3
+            }
+            val progress = ((level + 1).toFloat() / 5f).coerceIn(0.25f, 1.0f)
+
+            WifiLiveState(
+                isEnabled = true,
+                isConnected = true,
+                ssid = finalSsid,
+                signalLevel = level,
+                progress = progress,
+                statusText = finalSsid,
+                accentColor = Color(0xFF34C759)
+            )
+        } else {
+            WifiLiveState(
+                isEnabled = true,
+                isConnected = false,
+                ssid = "",
+                signalLevel = 0,
+                progress = 0.15f,
+                statusText = "Available",
+                accentColor = Color(0xFFFF9500)
+            )
+        }
+    } catch (e: Throwable) {
+        WifiLiveState(
+            isEnabled = true,
+            isConnected = false,
+            ssid = "",
+            signalLevel = 0,
+            progress = 0.5f,
+            statusText = "Wi-Fi",
+            accentColor = Color(0xFF34C759)
+        )
+    }
+}
+
+data class BatteryLiveState(
+    val percentage: Int,
+    val isCharging: Boolean,
+    val statusText: String,
+    val progress: Float,
+    val accentColor: Color
+)
+
+private fun getBatteryLiveState(context: Context): BatteryLiveState {
+    return try {
+        val batteryIntent = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+        val level = batteryIntent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+        val scale = batteryIntent?.getIntExtra(BatteryManager.EXTRA_SCALE, 100) ?: 100
+        val status = batteryIntent?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
+        val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                status == BatteryManager.BATTERY_STATUS_FULL
+
+        val pct = if (level >= 0 && scale > 0) {
+            ((level.toFloat() / scale.toFloat()) * 100).toInt().coerceIn(0, 100)
+        } else {
+            val bm = context.getSystemService(Context.BATTERY_SERVICE) as? BatteryManager
+            bm?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)?.coerceIn(0, 100) ?: 85
+        }
+
+        val statusText = if (isCharging) "⚡ $pct%" else "$pct%"
+        val progress = (pct / 100f).coerceIn(0.05f, 1f)
+        val accentColor = when {
+            isCharging -> Color(0xFF00C7BE)
+            pct <= 20 -> Color(0xFFFF3B30)
+            pct <= 40 -> Color(0xFFFF9500)
+            else -> Color(0xFF34C759)
+        }
+
+        BatteryLiveState(
+            percentage = pct,
+            isCharging = isCharging,
+            statusText = statusText,
+            progress = progress,
+            accentColor = accentColor
+        )
+    } catch (e: Throwable) {
+        BatteryLiveState(
+            percentage = 85,
+            isCharging = false,
+            statusText = "85%",
+            progress = 0.85f,
+            accentColor = Color(0xFF34C759)
+        )
+    }
+}
+
+data class StorageLiveDetails(
     val freeGb: Int,
     val totalGb: Int,
     val usedGb: Int,
-    val summary: String
+    val summary: String,
+    val statusText: String,
+    val progress: Float,
+    val accentColor: Color
 )
 
-private fun getStorageDetails(): StorageDetails {
+private fun getStorageLiveDetails(context: Context): StorageLiveDetails {
     return try {
+        val sm = context.getSystemService(Context.STORAGE_SERVICE) as? StorageManager
         val stat = StatFs(Environment.getDataDirectory().path)
         val availableBytes = stat.availableBlocksLong * stat.blockSizeLong
-        val totalBytes = stat.blockCountLong * stat.blockSizeLong
-        val usedGb = ((totalBytes - availableBytes) / (1024.0 * 1024.0 * 1024.0)).toInt()
-        val totalGb = (totalBytes / (1024.0 * 1024.0 * 1024.0)).toInt()
+        val partitionTotalBytes = stat.blockCountLong * stat.blockSizeLong
+
+        var hardwareTotalBytes = 0L
+        try {
+            hardwareTotalBytes = sm?.primaryStorageSize ?: 0L
+        } catch (ignored: Throwable) {}
+
+        val totalGb = if (hardwareTotalBytes > 0L) {
+            roundToStandardStorageGb(hardwareTotalBytes)
+        } else {
+            roundToStandardStorageGb(partitionTotalBytes)
+        }
+
         val freeGb = (availableBytes / (1024.0 * 1024.0 * 1024.0)).toInt()
-        StorageDetails(freeGb, totalGb, usedGb, "$freeGb GB free of $totalGb GB")
+        val usedGb = (totalGb - freeGb).coerceAtLeast(0)
+        val progress = (usedGb.toFloat() / totalGb.coerceAtLeast(1).toFloat()).coerceIn(0.05f, 1f)
+
+        val accentColor = when {
+            freeGb < 5 -> Color(0xFFFF3B30)
+            freeGb < 15 -> Color(0xFFFF9500)
+            else -> Color(0xFF007AFF)
+        }
+
+        StorageLiveDetails(
+            freeGb = freeGb,
+            totalGb = totalGb,
+            usedGb = usedGb,
+            summary = "$freeGb GB free of $totalGb GB",
+            statusText = "$freeGb GB Free",
+            progress = progress,
+            accentColor = accentColor
+        )
     } catch (e: Throwable) {
-        StorageDetails(64, 128, 64, "Storage available")
+        StorageLiveDetails(
+            freeGb = 64,
+            totalGb = 128,
+            usedGb = 64,
+            summary = "64 GB free of 128 GB",
+            statusText = "64 GB Free",
+            progress = 0.5f,
+            accentColor = Color(0xFF007AFF)
+        )
     }
 }
+
+private fun roundToStandardStorageGb(bytes: Long): Int {
+    val gb = bytes / (1000.0 * 1000.0 * 1000.0)
+    val tiers = intArrayOf(16, 32, 64, 128, 256, 512, 1024, 2048)
+    for (tier in tiers) {
+        if (gb <= tier * 1.05) {
+            return tier
+        }
+    }
+    return (bytes / (1024.0 * 1024.0 * 1024.0)).toInt()
+}
+
