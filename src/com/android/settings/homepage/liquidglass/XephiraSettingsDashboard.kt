@@ -538,6 +538,8 @@ private fun LiquidGlassStatusPill(
     isDark: Boolean = isSystemInDarkTheme(),
     onClick: () -> Unit
 ) {
+    val haptics = com.android.settings.widget.liquidglass.haptics.rememberXephiraHaptics()
+
     Box(
         modifier = modifier
             .pureLiquidGlass(
@@ -547,7 +549,10 @@ private fun LiquidGlassStatusPill(
                 borderWidth = 1.dp,
                 isDark = isDark
             )
-            .clickable { onClick() }
+            .clickable {
+                haptics.lightClick()
+                onClick()
+            }
             .padding(horizontal = 10.dp, vertical = 10.dp)
     ) {
         Column(
@@ -621,6 +626,7 @@ private fun LiquidGlassTile(
     isDark: Boolean = isSystemInDarkTheme(),
     onClick: () -> Unit
 ) {
+    val haptics = com.android.settings.widget.liquidglass.haptics.rememberXephiraHaptics()
     var isPressed by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.98f else 1.0f,
@@ -636,6 +642,7 @@ private fun LiquidGlassTile(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
+                haptics.lightClick()
                 isPressed = !isPressed
                 onClick()
             }

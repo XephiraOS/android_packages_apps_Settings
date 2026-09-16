@@ -73,6 +73,8 @@ fun XephiraSoundHeroCard() {
         else -> Color(0xFF64748B)
     }
 
+    val haptics = com.android.settings.widget.liquidglass.haptics.rememberXephiraHaptics()
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -82,6 +84,12 @@ fun XephiraSoundHeroCard() {
                 refraction = 14f,
                 isDark = isDark
             )
+            .androidx.compose.foundation.clickable(
+                interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
+                indication = null
+            ) {
+                haptics.lightClick()
+            }
             .padding(22.dp)
     ) {
         Row(

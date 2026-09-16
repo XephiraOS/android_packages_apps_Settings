@@ -75,6 +75,7 @@ fun XephiraAboutHeader() {
     val androidVersion = SystemProperties.get("ro.xephira.android.version", "16")
     val codename = SystemProperties.get("ro.xephira.device", Build.DEVICE)
     val securityPatch = Build.VERSION.SECURITY_PATCH
+    val haptics = com.android.settings.widget.liquidglass.haptics.rememberXephiraHaptics()
 
     var clickCount by remember { mutableIntStateOf(0) }
     var isPressed by remember { mutableStateOf(false) }
@@ -105,6 +106,7 @@ fun XephiraAboutHeader() {
                 ) {
                     clickCount++
                     isPressed = !isPressed
+                    haptics.confirm()
                 }
                 .padding(24.dp)
         ) {

@@ -78,6 +78,8 @@ fun XephiraBatteryHeroCard() {
         else -> Color(0xFF047857)
     }
 
+    val haptics = com.android.settings.widget.liquidglass.haptics.rememberXephiraHaptics()
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -87,6 +89,12 @@ fun XephiraBatteryHeroCard() {
                 refraction = 14f,
                 isDark = isDark
             )
+            .androidx.compose.foundation.clickable(
+                interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
+                indication = null
+            ) {
+                haptics.gesturePulse()
+            }
             .height(160.dp)
     ) {
         // Background animated liquid wave chamber
