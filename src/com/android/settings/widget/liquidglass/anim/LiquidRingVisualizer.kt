@@ -105,13 +105,38 @@ fun LiquidRingVisualizer(
         // Specular shimmer head along the ring orbit
         val shimmerLength = 40f
         drawArc(
-            color = Color.White.copy(alpha = 0.45f),
+            color = Color.White.copy(alpha = 0.55f),
             startAngle = rotationOffset,
             sweepAngle = shimmerLength,
             useCenter = false,
             topLeft = topLeft,
             size = arcSize,
             style = Stroke(width = strokeWidth * 0.7f, cap = StrokeCap.Round)
+        )
+
+        // Outer and inner hairline glass rims for 3D bevel effect
+        val outerDiameter = diameter + strokeWidth
+        val outerTopLeft = Offset((width - outerDiameter) / 2f, (height - outerDiameter) / 2f)
+        drawArc(
+            color = Color.White.copy(alpha = 0.16f),
+            startAngle = 0f,
+            sweepAngle = 360f,
+            useCenter = false,
+            topLeft = outerTopLeft,
+            size = Size(outerDiameter, outerDiameter),
+            style = Stroke(width = 1f)
+        )
+
+        val innerDiameter = (diameter - strokeWidth).coerceAtLeast(10f)
+        val innerTopLeft = Offset((width - innerDiameter) / 2f, (height - innerDiameter) / 2f)
+        drawArc(
+            color = Color.White.copy(alpha = 0.12f),
+            startAngle = 0f,
+            sweepAngle = 360f,
+            useCenter = false,
+            topLeft = innerTopLeft,
+            size = Size(innerDiameter, innerDiameter),
+            style = Stroke(width = 1f)
         )
     }
 }

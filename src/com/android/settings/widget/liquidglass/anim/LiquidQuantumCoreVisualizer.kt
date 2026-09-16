@@ -119,11 +119,33 @@ fun LiquidQuantumCoreVisualizer(
             )
         }
 
-        // ─── 3. CENTRAL PULSATING QUANTUM NUCLEUS ──────────────────
+        // ─── 3. CENTRAL PULSATING QUANTUM NUCLEUS & RADIANT HALO ───
         drawCircle(
-            color = Color.White.copy(alpha = 0.90f),
-            radius = 5f,
+            brush = androidx.compose.ui.graphics.Brush.radialGradient(
+                colors = listOf(
+                    primaryColor.copy(alpha = 0.55f),
+                    secondaryColor.copy(alpha = 0.20f),
+                    Color.Transparent
+                ),
+                center = center,
+                radius = innerRadius * 0.9f
+            ),
+            radius = innerRadius * 0.9f,
             center = center
+        )
+
+        drawCircle(
+            color = Color.White.copy(alpha = 0.95f),
+            radius = 5.5f,
+            center = center
+        )
+
+        // Outer precision chronometer ring
+        drawCircle(
+            color = Color.White.copy(alpha = 0.06f),
+            radius = outerRadius + 8f,
+            center = center,
+            style = Stroke(width = 1f)
         )
     }
 }

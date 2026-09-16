@@ -142,12 +142,46 @@ fun LiquidWaveVisualizer(
             path = fgPath,
             brush = Brush.verticalGradient(
                 colors = listOf(
-                    primaryColor.copy(alpha = 0.45f),
-                    primaryColor.copy(alpha = 0.18f),
+                    primaryColor.copy(alpha = 0.55f),
+                    primaryColor.copy(alpha = 0.22f),
                     Color.Transparent
                 ),
                 startY = waterLevel - waveAmp2,
                 endY = height
+            )
+        )
+
+        // ─── 2.1 SPECULAR GLOWING WAVE CREST LINE ──────────────────────────
+        val crestPath = Path().apply {
+            var x = 0f
+            var first = true
+            while (x <= width) {
+                val progress = x / width
+                val y = waterLevel + waveAmp2 * sin((progress * 2 * PI.toFloat() * 1.5f) + phase2)
+                if (first) {
+                    moveTo(x, y)
+                    first = false
+                } else {
+                    lineTo(x, y)
+                }
+                x += 8f
+            }
+        }
+
+        drawPath(
+            path = crestPath,
+            brush = Brush.horizontalGradient(
+                colors = listOf(
+                    Color.White.copy(alpha = 0.2f),
+                    Color.White.copy(alpha = 0.85f),
+                    primaryColor.copy(alpha = 0.9f),
+                    Color.White.copy(alpha = 0.85f),
+                    Color.White.copy(alpha = 0.2f)
+                )
+            ),
+            style = androidx.compose.ui.graphics.drawscope.Stroke(
+                width = 2.5f,
+                cap = androidx.compose.ui.graphics.StrokeCap.Round
             )
         )
 

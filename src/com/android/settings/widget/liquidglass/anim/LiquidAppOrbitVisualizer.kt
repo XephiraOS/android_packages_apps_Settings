@@ -65,11 +65,15 @@ fun LiquidAppOrbitVisualizer(
         val orbitRadius = minOf(width, height) * 0.38f
 
         // ─── 1. ORBITAL GLASS TRACK ─────────────────────────────────
-        drawCircle(
-            color = Color.White.copy(alpha = 0.12f),
-            radius = orbitRadius,
-            center = center,
-            style = Stroke(width = 2f, cap = StrokeCap.Round)
+        // ─── 1. ORBITAL GLASS TRACK (3D PERSPECTIVE ELLIPSE) ─────────
+        val yTilt = 0.58f
+        val rectTopLeft = Offset(center.x - orbitRadius, center.y - (orbitRadius * yTilt))
+        val rectSize = androidx.compose.ui.geometry.Size(orbitRadius * 2f, orbitRadius * 2f * yTilt)
+        drawOval(
+            color = Color.White.copy(alpha = 0.14f),
+            topLeft = rectTopLeft,
+            size = rectSize,
+            style = Stroke(width = 2f)
         )
 
         // ─── 2. CENTRAL HUB ─────────────────────────────────────────
@@ -84,7 +88,7 @@ fun LiquidAppOrbitVisualizer(
             center = center
         )
 
-        // ─── 3. ORBITING SATELLITE NODES ────────────────────────────
+        // ─── 3. ORBITING SATELLITE NODES (WITH DEPTH SORTING) ───────
         val nodeAngles = listOf(0f, 120f, 240f)
         val nodeColors = listOf(primaryColor, secondaryColor, Color(0xFF38BDF8))
         val nodeRadii = listOf(8f, 7f, 9f)
@@ -94,27 +98,33 @@ fun LiquidAppOrbitVisualizer(
             val angleRad = Math.toRadians(angleDeg.toDouble())
 
             val nx = center.x + orbitRadius * Math.cos(angleRad).toFloat()
-            val ny = center.y + orbitRadius * Math.sin(angleRad).toFloat()
+            val ny = center.y + (orbitRadius * yTilt) * Math.sin(angleRad).toFloat()
+
+            // Depth scale: larger and brighter in front (sin > 0), softer behind (sin < 0)
+            val sinVal = Math.sin(angleRad).toFloat()
+            val depthScale = 0.85f + (sinVal + 1f) * 0.18f
+            val r = nodeRadii[i] * depthScale
+            val alphaMod = if (sinVal < 0) 0.65f else 1.0f
 
             // Outer node glow
             drawCircle(
-                color = nodeColors[i].copy(alpha = 0.35f),
-                radius = nodeRadii[i] * 1.8f,
+                color = nodeColors[i].copy(alpha = 0.35f * alphaMod),
+                radius = r * 1.8f,
                 center = Offset(nx, ny)
             )
 
             // Inner solid glass bead
             drawCircle(
-                color = nodeColors[i],
-                radius = nodeRadii[i],
+                color = nodeColors[i].copy(alpha = alphaMod),
+                radius = r,
                 center = Offset(nx, ny)
             )
 
             // Specular bead highlight
             drawCircle(
-                color = Color.White.copy(alpha = 0.85f),
-                radius = nodeRadii[i] * 0.35f,
-                center = Offset(nx - nodeRadii[i] * 0.3f, ny - nodeRadii[i] * 0.3f)
+                color = Color.White.copy(alpha = 0.85f * alphaMod),
+                radius = r * 0.35f,
+                center = Offset(nx - r * 0.3f, ny - r * 0.3f)
             )
         }
     }

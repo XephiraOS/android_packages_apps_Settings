@@ -109,12 +109,28 @@ fun LiquidAudioSpectrumVisualizer(
                 cornerRadius = CornerRadius(barWidth / 2f, barWidth / 2f)
             )
 
-            // Specular tip sheen
+            // Specular tip sheen & glass cap
             if (!isSilent) {
                 drawRoundRect(
-                    color = Color.White.copy(alpha = 0.65f),
+                    color = Color.White.copy(alpha = 0.85f),
                     topLeft = Offset(x, y),
-                    size = Size(barWidth, (barWidth * 0.8f).coerceAtMost(barHeight)),
+                    size = Size(barWidth, (barWidth * 0.9f).coerceAtMost(barHeight)),
+                    cornerRadius = CornerRadius(barWidth / 2f, barWidth / 2f)
+                )
+
+                // Subtle acoustic floor reflection
+                val reflectHeight = (barHeight * 0.28f).coerceAtMost(height * 0.22f)
+                drawRoundRect(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            primaryColor.copy(alpha = 0.25f),
+                            Color.Transparent
+                        ),
+                        startY = height,
+                        endY = height + reflectHeight
+                    ),
+                    topLeft = Offset(x, height),
+                    size = Size(barWidth, reflectHeight),
                     cornerRadius = CornerRadius(barWidth / 2f, barWidth / 2f)
                 )
             }

@@ -72,34 +72,73 @@ fun LiquidSignalArcVisualizer(
         if (width <= 0f || height <= 0f) return@Canvas
 
         val center = Offset(width / 2f, height / 2f)
-        val maxRadius = minOf(width, height) * 0.45f
-
-        // Central beacon dot
-        drawCircle(
-            color = if (isConnected) primaryColor else Color.Gray.copy(alpha = 0.4f),
-            radius = 6f,
-            center = center
-        )
+        val maxRadius = minOf(width, height) * 0.46f
 
         if (isConnected) {
-            // Ripple 1
-            val radius1 = (pulse1 % 1f) * maxRadius
-            val alpha1 = (1f - (pulse1 % 1f)).coerceIn(0f, 0.7f)
+            // Central beacon soft aura
             drawCircle(
-                color = primaryColor.copy(alpha = alpha1),
-                radius = radius1,
-                center = center,
-                style = Stroke(width = 3.5f, cap = StrokeCap.Round)
+                brush = androidx.compose.ui.graphics.Brush.radialGradient(
+                    colors = listOf(
+                        primaryColor.copy(alpha = 0.35f),
+                        primaryColor.copy(alpha = 0.08f),
+                        Color.Transparent
+                    ),
+                    center = center,
+                    radius = 28f
+                ),
+                radius = 28f,
+                center = center
             )
 
-            // Ripple 2
-            val radius2 = (pulse2 % 1f) * maxRadius
-            val alpha2 = (1f - (pulse2 % 1f)).coerceIn(0f, 0.7f)
+            // Central beacon core
             drawCircle(
-                color = primaryColor.copy(alpha = alpha2),
-                radius = radius2,
+                color = primaryColor,
+                radius = 6.5f,
+                center = center
+            )
+            drawCircle(
+                color = Color.White.copy(alpha = 0.85f),
+                radius = 2.5f,
+                center = center
+            )
+
+            // Dynamic Radiance Ripples (3 phases: 0, 0.33, 0.66)
+            val phases = listOf(pulse1, (pulse1 + 0.33f) % 1f, (pulse1 + 0.66f) % 1f)
+            phases.forEachIndexed { index, p ->
+                val radius = p * maxRadius
+                val baseAlpha = (1f - p).coerceIn(0f, 0.65f)
+                val strokeWidth = (3.5f - index * 0.6f).coerceAtLeast(1.8f)
+
+                // Wave body
+                drawCircle(
+                    color = primaryColor.copy(alpha = baseAlpha * 0.8f),
+                    radius = radius,
+                    center = center,
+                    style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+                )
+
+                // Specular crest hairline highlight
+                if (radius > 8f) {
+                    drawCircle(
+                        color = Color.White.copy(alpha = baseAlpha * 0.5f),
+                        radius = radius - 0.75f,
+                        center = center,
+                        style = Stroke(width = 1f, cap = StrokeCap.Round)
+                    )
+                }
+            }
+        } else {
+            // Dormant state: elegant subtle radar ring
+            drawCircle(
+                color = Color.Gray.copy(alpha = 0.15f),
+                radius = maxRadius * 0.7f,
                 center = center,
-                style = Stroke(width = 2.5f, cap = StrokeCap.Round)
+                style = Stroke(width = 1.5f)
+            )
+            drawCircle(
+                color = Color.Gray.copy(alpha = 0.4f),
+                radius = 5f,
+                center = center
             )
         }
     }

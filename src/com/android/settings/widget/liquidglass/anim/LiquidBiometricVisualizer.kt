@@ -139,5 +139,20 @@ fun LiquidBiometricVisualizer(
             size = innerSize,
             style = Stroke(width = 2f, cap = StrokeCap.Round)
         )
+
+        // ─── 4. HOLOGRAPHIC OPTICAL CORNER RETICLES ────────────────
+        val bracketDist = outerRadius + 8f
+        val bracketArm = 7f
+        val cornerAngles = listOf(45f, 135f, 225f, 315f)
+        for (angle in cornerAngles) {
+            val rad = Math.toRadians(angle.toDouble())
+            val bx = center.x + bracketDist * Math.cos(rad).toFloat()
+            val by = center.y + bracketDist * Math.sin(rad).toFloat()
+            drawCircle(
+                color = primaryColor.copy(alpha = 0.65f),
+                radius = 2f,
+                center = Offset(bx, by)
+            )
+        }
     }
 }

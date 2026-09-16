@@ -86,6 +86,7 @@ fun LiquidPrismVisualizer(
         val arcTopLeft = Offset(center.x - radius, center.y - radius)
         val arcSize = Size(radius * 2f, radius * 2f)
 
+        // Diffuse underglow arc
         drawArc(
             brush = Brush.sweepGradient(colors, center),
             startAngle = 190f,
@@ -96,7 +97,29 @@ fun LiquidPrismVisualizer(
             style = Stroke(width = 18f, cap = StrokeCap.Round)
         )
 
-        // Flowing 120Hz Photon Particles
+        // Specular glass refraction hairline along outer rim
+        drawArc(
+            color = Color.White.copy(alpha = if (isDark) 0.65f else 0.85f),
+            startAngle = 192f,
+            sweepAngle = 156f,
+            useCenter = false,
+            topLeft = Offset(center.x - (radius + 8f), center.y - (radius + 8f)),
+            size = Size((radius + 8f) * 2f, (radius + 8f) * 2f),
+            style = Stroke(width = 1.2f, cap = StrokeCap.Round)
+        )
+
+        // Specular inner bevel rim
+        drawArc(
+            color = Color.White.copy(alpha = if (isDark) 0.35f else 0.5f),
+            startAngle = 192f,
+            sweepAngle = 156f,
+            useCenter = false,
+            topLeft = Offset(center.x - (radius - 8f), center.y - (radius - 8f)),
+            size = Size((radius - 8f) * 2f, (radius - 8f) * 2f),
+            style = Stroke(width = 1f, cap = StrokeCap.Round)
+        )
+
+        // Flowing 120Hz Photon Particles with dual-layer glow
         val particleCount = 6
         for (i in 0 until particleCount) {
             val progress = (sweepPhase + (i.toFloat() / particleCount)) % 1f
@@ -105,10 +128,19 @@ fun LiquidPrismVisualizer(
 
             val px = center.x + radius * Math.cos(angleRad).toFloat()
             val py = center.y + radius * Math.sin(angleRad).toFloat()
+            val particleAlpha = 0.95f * (1f - progress * 0.35f)
 
+            // Outer photon glow halo
             drawCircle(
-                color = Color.White.copy(alpha = 0.85f * (1f - progress * 0.5f)),
-                radius = 4.5f,
+                color = Color.White.copy(alpha = particleAlpha * 0.35f),
+                radius = 8.5f,
+                center = Offset(px, py)
+            )
+
+            // Core high-energy photon
+            drawCircle(
+                color = Color.White.copy(alpha = particleAlpha),
+                radius = 3.5f,
                 center = Offset(px, py)
             )
         }
