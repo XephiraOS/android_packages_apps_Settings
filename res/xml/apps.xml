@@ -21,6 +21,13 @@
     android:key="apps_screen"
     android:title="@string/apps_dashboard_title">
 
+    <!-- Xephira Pure Liquid Glass Apps Hero Visualizer -->
+    <com.android.settings.spa.preference.ComposePreference
+        android:key="xephira_apps_hero"
+        android:order="-1000"
+        android:selectable="false"
+        settings:controller="com.android.settings.applications.XephiraAppsHeroPreferenceController" />
+
     <Preference
         android:key="all_app_infos"
         android:title="@string/all_apps"

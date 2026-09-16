@@ -21,6 +21,13 @@
     android:title="@string/display_settings"
     settings:keywords="@string/keywords_display">
 
+    <!-- Xephira Pure Liquid Glass Display Hero Visualizer -->
+    <com.android.settings.spa.preference.ComposePreference
+        android:key="xephira_display_hero"
+        android:order="-1000"
+        android:selectable="false"
+        settings:controller="com.android.settings.display.XephiraDisplayHeroPreferenceController" />
+
     <PreferenceCategory
         android:key="category_brightness"
         android:title="@string/category_name_brightness"

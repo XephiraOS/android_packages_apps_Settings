@@ -21,6 +21,13 @@
     android:key="security_dashboard_page"
     android:title="@string/security_settings_title">
 
+    <!-- Xephira Pure Liquid Glass Security Hero Visualizer -->
+    <com.android.settings.spa.preference.ComposePreference
+        android:key="xephira_security_hero"
+        android:order="-1000"
+        android:selectable="false"
+        settings:controller="com.android.settings.security.XephiraSecurityHeroPreferenceController" />
+
     <!-- security_settings_status.xml -->
     <PreferenceCategory
         android:order="-10"

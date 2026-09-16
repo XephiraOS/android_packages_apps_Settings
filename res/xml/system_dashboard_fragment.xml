@@ -20,6 +20,13 @@
     android:key="system_dashboard_screen"
     android:title="@string/header_category_system">
 
+    <!-- Xephira Pure Liquid Glass System Hero Visualizer -->
+    <com.android.settings.spa.preference.ComposePreference
+        android:key="xephira_system_hero"
+        android:order="-1000"
+        android:selectable="false"
+        settings:controller="com.android.settings.system.XephiraSystemHeroPreferenceController" />
+
     <Preference
         android:key="language_settings"
         android:title="@string/languages_settings"
