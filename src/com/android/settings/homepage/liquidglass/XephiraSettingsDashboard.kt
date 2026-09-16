@@ -98,18 +98,7 @@ fun XephiraSettingsDashboard(
             .padding(horizontal = 14.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        // ─── 1. FLOATING PURE LIQUID GLASS SEARCH BAR ─────────────
-        LiquidGlassSearchBar(
-            onClick = {
-                launchIntent(
-                    context,
-                    Settings.ACTION_APP_SEARCH_SETTINGS,
-                    "com.google.android.settings.intelligence.modules.search.SearchActivity"
-                )
-            }
-        )
-
-        // ─── 2. HERO STATUS & QUICK GLANCE ────────────────────────
+        // ─── HERO STATUS & QUICK GLANCE ────────────────────────
         LiquidGlassHeroBanner(
             xephiraVersion = xephiraVersion,
             androidVersion = androidVersion,
