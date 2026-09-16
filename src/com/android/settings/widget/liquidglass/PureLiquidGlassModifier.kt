@@ -182,11 +182,13 @@ fun Modifier.pureLiquidGlass(
         }
         if (shader != null) {
             baseModifier.graphicsLayer {
-                val rPx = cornerRadius.toPx()
-                shader.setFloatUniform("size", size.width, size.height)
-                shader.setFloatUniform("radius", rPx)
-                shader.setFloatUniform("refraction", refraction)
-                renderEffect = RenderEffect.createRuntimeShaderEffect(shader, "content").asComposeRenderEffect()
+                if (size.width > 0f && size.height > 0f) {
+                    val rPx = cornerRadius.toPx()
+                    shader.setFloatUniform("size", size.width, size.height)
+                    shader.setFloatUniform("radius", rPx)
+                    shader.setFloatUniform("refraction", refraction)
+                    renderEffect = RenderEffect.createRuntimeShaderEffect(shader, "content").asComposeRenderEffect()
+                }
             }
         } else {
             baseModifier

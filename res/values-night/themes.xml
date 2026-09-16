@@ -72,7 +72,9 @@
     </style>
 
     <style name="Theme.CollapsingToolbar.Settings" parent="@style/Theme.MaterialComponents.DayNight">
-        <item name="elevationOverlayEnabled">true</item>
+        <item name="android:windowBackground">@color/xephira_bg_base</item>
+        <item name="android:colorBackground">@color/xephira_bg_base</item>
+        <item name="elevationOverlayEnabled">false</item>
         <item name="elevationOverlayColor">?attr/colorPrimary</item>
         <item name="colorPrimary">@*android:color/primary_dark_device_default_settings</item>
         <item name="colorAccent">@*android:color/accent_device_default_dark</item>
