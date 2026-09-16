@@ -20,6 +20,13 @@
     android:key="network_provider_and_internet_screen"
     android:title="@string/network_dashboard_title">
 
+    <!-- Xephira Pure Liquid Glass Connectivity Hero Visualizer -->
+    <com.android.settings.spa.preference.ComposePreference
+        android:key="xephira_connectivity_hero"
+        android:order="-1000"
+        android:selectable="false"
+        settings:controller="com.android.settings.network.XephiraConnectivityHeroPreferenceController" />
+
     <com.android.settingslib.RestrictedPreference
         android:fragment="com.android.settings.network.NetworkProviderSettings"
         android:key="internet_settings"

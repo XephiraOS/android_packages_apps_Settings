@@ -21,6 +21,13 @@
     android:title="@string/power_usage_summary_title"
     settings:keywords="@string/keywords_battery">
 
+    <!-- Xephira Pure Liquid Glass Battery Hero Visualizer -->
+    <com.android.settings.spa.preference.ComposePreference
+        android:key="xephira_battery_hero"
+        android:order="-1000"
+        android:selectable="false"
+        settings:controller="com.android.settings.fuelgauge.batteryusage.XephiraBatteryHeroPreferenceController" />
+
     <com.android.settingslib.widget.UsageProgressBarPreference
         android:key="battery_header"
         android:title="@string/summary_placeholder"
