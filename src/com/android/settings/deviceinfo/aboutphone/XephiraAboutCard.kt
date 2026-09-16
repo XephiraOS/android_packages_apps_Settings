@@ -126,6 +126,8 @@ fun XephiraAboutScreen(
     val (deviceTitle, deviceDetail) = remember { getRealDeviceSummary() }
     val buildNumber = remember { getSanitizedBuildNumber() }
     val uptime = remember { formatUptime(SystemClock.elapsedRealtime()) }
+    val maintainer = remember { getDeviceMaintainer() }
+    val maintainerUrl = remember { SystemProperties.get("ro.xephira.maintainer.url", "") }
     val ipAddress = remember { getRealIpAddress(context) }
     val simSummary = remember { getSimCarrierSummary(context) }
 
@@ -413,6 +415,22 @@ fun XephiraAboutScreen(
                 onClick = {
                     haptics.lightClick()
                     copyToClipboard(context, "Uptime", uptime)
+                }
+            )
+            AboutDivider(isDark = isDark)
+            AboutDetailRow(
+                iconRes = R.drawable.ic_settings_about_device_filled,
+                title = "Device maintainer",
+                subtitle = maintainer,
+                badge = if (maintainer != "XephiraOS Team") "Verified" else null,
+                isDark = isDark,
+                onClick = {
+                    haptics.lightClick()
+                    if (maintainerUrl.isNotEmpty()) {
+                        launchWebUrl(context, maintainerUrl)
+                    } else {
+                        copyToClipboard(context, "Device Maintainer", maintainer)
+                    }
                 }
             )
         }
@@ -744,12 +762,20 @@ private fun AboutDivider(
 private fun getRealDeviceSummary(): Pair<String, String> {
     val model = Build.MODEL
     val manufacturer = Build.MANUFACTURER.replaceFirstChar { it.uppercase() }
-    val device = Build.DEVICE
-    return Pair(model, "$manufacturer • $device")
+    val customDisplay = SystemProperties.get("ro.xephira.display")
+    val subtitle = if (customDisplay.isNotEmpty()) {
+        "$manufacturer • ${customDisplay.replace("_", " ")}"
+    } else {
+        "$manufacturer • ${Build.DEVICE}"
+    }
+    return Pair(model, subtitle)
 }
 
 private fun getRealProcessorSummary(): Pair<String, String> {
-    val socModel = if (Build.SOC_MODEL != Build.UNKNOWN && Build.SOC_MODEL.isNotEmpty()) {
+    val customSoc = SystemProperties.get("ro.xephira.soc")
+    val socModel = if (customSoc.isNotEmpty()) {
+        customSoc.replace("_", " ")
+    } else if (Build.SOC_MODEL != Build.UNKNOWN && Build.SOC_MODEL.isNotEmpty()) {
         Build.SOC_MODEL
     } else {
         val roSoc = SystemProperties.get("ro.soc.model")
@@ -776,6 +802,16 @@ private fun getRealProcessorSummary(): Pair<String, String> {
     val subtitle = "$cores Cores • $arch"
 
     return Pair(title, subtitle)
+}
+
+private fun getDeviceMaintainer(): String {
+    val prop = SystemProperties.get("ro.xephira.maintainer")
+        .ifEmpty { SystemProperties.get("ro.lineage.maintainer") }
+        .ifEmpty { SystemProperties.get("ro.build.user") }
+    if (prop.isEmpty() || prop.equals("UNKNOWN", ignoreCase = true)) {
+        return "XephiraOS Team"
+    }
+    return prop.replace("_", " ")
 }
 
 private fun getRealPlatformSummary(context: Context): Pair<String, String> {

@@ -115,6 +115,8 @@ fun XephiraFirmwareVersionScreen(
         if (ver.isNotEmpty()) ver else SystemProperties.get("ro.lineage.version", "1.0")
     }
     val xephiraBuildType = remember { SystemProperties.get("ro.xephira.buildtype", "OFFICIAL") }
+    val maintainer = remember { getDeviceMaintainer() }
+    val maintainerUrl = remember { SystemProperties.get("ro.xephira.maintainer.url", "") }
     val selinuxStatus = remember { getSELinuxStatus() }
 
     // Easter egg & telemetry dialog states
@@ -270,6 +272,23 @@ fun XephiraFirmwareVersionScreen(
                 onClick = {
                     haptics.lightClick()
                     copyToClipboard(context, "Build Date", buildDate)
+                }
+            )
+            FirmwareDivider(isDark = isDark)
+            FirmwareDetailTile(
+                iconRes = R.drawable.ic_settings_about_device_filled,
+                gradientColors = listOf(Color(0xFF34C759), Color(0xFF30D158)),
+                title = "Device maintainer",
+                subtitle = maintainer,
+                badge = if (maintainer != "XephiraOS Team") "Verified" else null,
+                isDark = isDark,
+                onClick = {
+                    haptics.lightClick()
+                    if (maintainerUrl.isNotEmpty()) {
+                        launchWebUrl(context, maintainerUrl)
+                    } else {
+                        copyToClipboard(context, "Device Maintainer", maintainer)
+                    }
                 }
             )
         }
@@ -757,4 +776,14 @@ fun getSanitizedBuildNumber(): String {
         .replace("lineage-", "xephira-", ignoreCase = true)
         .replace("LineageOS", "XephiraOS", ignoreCase = true)
         .replace("lineage", "xephira", ignoreCase = true)
+}
+
+private fun getDeviceMaintainer(): String {
+    val prop = SystemProperties.get("ro.xephira.maintainer")
+        .ifEmpty { SystemProperties.get("ro.lineage.maintainer") }
+        .ifEmpty { SystemProperties.get("ro.build.user") }
+    if (prop.isEmpty() || prop.equals("UNKNOWN", ignoreCase = true)) {
+        return "XephiraOS Team"
+    }
+    return prop.replace("_", " ")
 }
