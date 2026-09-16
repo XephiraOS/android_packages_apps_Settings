@@ -73,7 +73,10 @@ fun XephiraSoundHeroCard() {
         else -> Color(0xFF64748B)
     }
 
-    val haptics = com.android.settings.widget.liquidglass.haptics.rememberXephiraHaptics()
+    val audioManager = remember { context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager }
+    val maxVol = remember { (audioManager?.getStreamMaxVolume(AudioManager.STREAM_MUSIC) ?: 15).toFloat() }
+    val currentVol = remember { (audioManager?.getStreamVolume(AudioManager.STREAM_MUSIC) ?: 10).toFloat() }
+    var volumeValue by remember { androidx.compose.runtime.mutableFloatStateOf(currentVol) }
 
     Box(
         modifier = Modifier
@@ -84,82 +87,94 @@ fun XephiraSoundHeroCard() {
                 refraction = 14f,
                 isDark = isDark
             )
-            .androidx.compose.foundation.clickable(
-                interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
-                indication = null
-            ) {
-                haptics.lightClick()
-            }
-            .padding(22.dp)
+            .padding(20.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column(modifier = Modifier.weight(1.1f)) {
-                Text(
-                    text = audioInfo.title,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = if (isDark) Color.White else Color(0xFF0F172A),
-                    letterSpacing = (-0.3).sp
-                )
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(modifier = Modifier.weight(1.1f)) {
+                    Text(
+                        text = audioInfo.title,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (isDark) Color.White else Color(0xFF0F172A),
+                        letterSpacing = (-0.3).sp
+                    )
 
-                Spacer(modifier = Modifier.height(3.dp))
+                    Spacer(modifier = Modifier.height(3.dp))
 
-                Text(
-                    text = audioInfo.subtitle,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = if (isDark) Color(0xFFD1D5DB) else Color(0xFF475569)
-                )
+                    Text(
+                        text = audioInfo.subtitle,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = if (isDark) Color(0xFFD1D5DB) else Color(0xFF475569)
+                    )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
-                Surface(
-                    shape = CircleShape,
-                    color = if (isDark) Color(0x22FFFFFF) else Color(0x14000000),
-                    border = BorderStroke(1.dp, if (isDark) Color(0x35FFFFFF) else Color(0x20000000))
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp)
+                    Surface(
+                        shape = CircleShape,
+                        color = if (isDark) Color(0x22FFFFFF) else Color(0x14000000),
+                        border = BorderStroke(1.dp, if (isDark) Color(0x35FFFFFF) else Color(0x20000000))
                     ) {
-                        Icon(
-                            imageVector = when (ringerMode) {
-                                AudioManager.RINGER_MODE_NORMAL -> Icons.Outlined.NotificationsActive
-                                AudioManager.RINGER_MODE_VIBRATE -> Icons.Outlined.Vibration
-                                else -> Icons.Outlined.NotificationsOff
-                            },
-                            contentDescription = null,
-                            tint = primaryColor,
-                            modifier = Modifier.size(14.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = audioInfo.chipText,
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = if (isDark) Color.White else Color(0xFF0F172A)
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+                        ) {
+                            Icon(
+                                imageVector = when (ringerMode) {
+                                    AudioManager.RINGER_MODE_NORMAL -> Icons.Outlined.NotificationsActive
+                                    AudioManager.RINGER_MODE_VIBRATE -> Icons.Outlined.Vibration
+                                    else -> Icons.Outlined.NotificationsOff
+                                },
+                                contentDescription = null,
+                                tint = primaryColor,
+                                modifier = Modifier.size(13.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = audioInfo.chipText,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = if (isDark) Color.White else Color(0xFF0F172A)
+                            )
+                        }
                     }
+                }
+
+                // Animated Equalizer Visualizer
+                Box(
+                    modifier = Modifier
+                        .width(115.dp)
+                        .height(64.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    LiquidAudioSpectrumVisualizer(
+                        isSilent = isSilent,
+                        primaryColor = primaryColor,
+                        secondaryColor = secondaryColor
+                    )
                 }
             }
 
-            // Animated Equalizer Visualizer
-            Box(
-                modifier = Modifier
-                    .width(115.dp)
-                    .height(68.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                LiquidAudioSpectrumVisualizer(
-                    isSilent = isSilent,
-                    primaryColor = primaryColor,
-                    secondaryColor = secondaryColor
-                )
-            }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Fluid Liquid Glass Media Volume Slider
+            com.android.settings.widget.liquidglass.slider.LiquidGlassSlider(
+                value = volumeValue,
+                onValueChange = { newVol ->
+                    volumeValue = newVol
+                    audioManager?.setStreamVolume(AudioManager.STREAM_MUSIC, newVol.toInt(), 0)
+                },
+                valueRange = 0f..maxVol,
+                icon = Icons.Outlined.GraphicEq,
+                title = "Media Volume",
+                primaryColor = primaryColor,
+                isDark = isDark
+            )
         }
     }
 }
