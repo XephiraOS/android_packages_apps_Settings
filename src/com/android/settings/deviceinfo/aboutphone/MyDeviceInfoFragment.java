@@ -268,7 +268,7 @@ public class MyDeviceInfoFragment extends DashboardFragment
 
     @Override
     public @Nullable String getPreferenceScreenBindingKey(@NonNull Context context) {
-        return MyDeviceInfoScreen.KEY;
+        return null;
     }
 
     /**
