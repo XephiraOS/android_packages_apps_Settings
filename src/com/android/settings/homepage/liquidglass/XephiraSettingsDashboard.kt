@@ -237,14 +237,6 @@ fun XephiraSettingsDashboard(
                 haptics.heavyClick()
                 launchSystemUpdate(context)
             },
-            onVersionClick = {
-                haptics.heavyClick()
-                launchSystemUpdate(context)
-            },
-            onSubtitleClick = {
-                haptics.lightClick()
-                launchAboutPhone(context)
-            },
             onLogoEasterEgg = {
                 showPerformanceHUD = true
             },
@@ -728,8 +720,6 @@ private fun LiquidGlassHeroBanner(
     storageState: StorageLiveDetails,
     isDark: Boolean = isSystemInDarkTheme(),
     onHeroClick: () -> Unit,
-    onVersionClick: () -> Unit,
-    onSubtitleClick: () -> Unit,
     onLogoEasterEgg: () -> Unit,
     onBatteryClick: () -> Unit,
     onStorageClick: () -> Unit,
@@ -760,7 +750,7 @@ private fun LiquidGlassHeroBanner(
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        // Main Hero Box
+        // Main Hero Box - Exclusively opens System Updater
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -776,7 +766,7 @@ private fun LiquidGlassHeroBanner(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null
                 ) {
-                    haptics.lightClick()
+                    haptics.heavyClick()
                     isPressed = !isPressed
                     onHeroClick()
                 }
@@ -832,24 +822,12 @@ private fun LiquidGlassHeroBanner(
                             text = "XephiraOS $xephiraVersion",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = if (isDark) Color.White else Color(0xFF0F172A),
-                            modifier = Modifier.clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null
-                            ) {
-                                onVersionClick()
-                            }
+                            color = if (isDark) Color.White else Color(0xFF0F172A)
                         )
                         Surface(
                             shape = CircleShape,
                             color = if (isDark) Color(0x22FFFFFF) else Color(0x12000000),
-                            border = BorderStroke(1.dp, if (isDark) Color(0x40FFFFFF) else Color(0x24000000)),
-                            modifier = Modifier.clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null
-                            ) {
-                                onVersionClick()
-                            }
+                            border = BorderStroke(1.dp, if (isDark) Color(0x40FFFFFF) else Color(0x24000000))
                         ) {
                             Text(
                                 text = buildType,
@@ -866,13 +844,7 @@ private fun LiquidGlassHeroBanner(
                     Text(
                         text = "Android $androidVersion • ${Build.MODEL}",
                         fontSize = 12.sp,
-                        color = if (isDark) Color(0xFFD1D5DB) else Color(0xFF475569),
-                        modifier = Modifier.clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        ) {
-                            onSubtitleClick()
-                        }
+                        color = if (isDark) Color(0xFFD1D5DB) else Color(0xFF475569)
                     )
                 }
 
@@ -1378,8 +1350,15 @@ private fun launchSystemUpdate(context: Context) {
         return
     } catch (ignored: Throwable) {}
 
-    // 4. Fallback to About Phone
-    launchAboutPhone(context)
+    // 4. Standalone action fallback strictly for updater
+    try {
+        val fallback = Intent(Settings.ACTION_SYSTEM_UPDATE_SETTINGS).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        context.startActivity(fallback)
+    } catch (e: Throwable) {
+        Log.e("XephiraSettings", "Failed to launch system update", e)
+    }
 }
 
 private fun launchAboutPhone(context: Context) {
