@@ -67,6 +67,16 @@ class XephiraHaptics(private val view: View) {
             HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING
         )
     }
+
+    /**
+     * Firm, prominent glass click for hero actions, easter eggs, and major state transitions.
+     */
+    fun heavyClick() {
+        view.performHapticFeedback(
+            HapticFeedbackConstants.LONG_PRESS,
+            HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING
+        )
+    }
 }
 
 /**

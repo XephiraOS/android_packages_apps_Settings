@@ -1236,7 +1236,7 @@ private fun launchSettingsSearch(context: Context) {
     try {
         val activity = context as? Activity
             ?: (context as? ContextWrapper)?.baseContext as? Activity
-        val featureFactory = FeatureFactory.getFeatureFactory()
+        val featureFactory = FeatureFactory.featureFactory
         val searchProvider = featureFactory.searchFeatureProvider
         val intent = searchProvider.buildSearchIntent(context, SettingsEnums.SETTINGS_HOMEPAGE)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
