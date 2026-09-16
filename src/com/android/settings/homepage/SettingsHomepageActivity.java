@@ -390,15 +390,17 @@ public class SettingsHomepageActivity extends FragmentActivity implements
                     Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()
                             | WindowInsetsCompat.Type.displayCutout());
                     // Apply the insets paddings to the view.
-                    v.setPadding(insets.left, 0, insets.right, insets.bottom);
+                    v.setPadding(insets.left, insets.top, insets.right, insets.bottom);
 
                     // reset the top padding of search bar container to original top padding
-                    // plus insets top.
+                    // plus insets top if visible.
                     View container = findViewById(R.id.app_bar_container);
-                    final int top_padding = getResources().getDimensionPixelSize(
-                            R.dimen.search_bar_container_top_padding);
-                    container.setPadding(container.getPaddingLeft(), top_padding + insets.top,
-                            container.getPaddingRight(), container.getPaddingBottom());
+                    if (container != null && container.getVisibility() != View.GONE) {
+                        final int top_padding = getResources().getDimensionPixelSize(
+                                R.dimen.search_bar_container_top_padding);
+                        container.setPadding(container.getPaddingLeft(), top_padding + insets.top,
+                                container.getPaddingRight(), container.getPaddingBottom());
+                    }
 
                     // Return CONSUMED if you don't want the window insets to keep being
                     // passed down to descendant views.
@@ -407,10 +409,15 @@ public class SettingsHomepageActivity extends FragmentActivity implements
     }
 
     private void initSearchBarView() {
-        View toolbar = findViewById(R.id.search_action_bar);
-        FeatureFactory.getFeatureFactory().getSearchFeatureProvider()
-                .initSearchToolbar(this /* activity */, toolbar,
-                        SettingsEnums.SETTINGS_HOMEPAGE);
+        // Hide native AppBarLayout so the Compose Liquid Glass search bar is used exclusively
+        View appBar = findViewById(R.id.app_bar);
+        if (appBar != null) {
+            appBar.setVisibility(View.GONE);
+        }
+        View container = findViewById(R.id.app_bar_container);
+        if (container != null) {
+            container.setVisibility(View.GONE);
+        }
     }
 
     private void updateHomepageUI() {
@@ -437,7 +444,10 @@ public class SettingsHomepageActivity extends FragmentActivity implements
         // Update content background.
         findViewById(android.R.id.content).setBackgroundColor(color);
         //Update search bar background
-        findViewById(R.id.app_bar_container).setBackgroundColor(color);
+        View container = findViewById(R.id.app_bar_container);
+        if (container != null) {
+            container.setBackgroundColor(color);
+        }
     }
 
     private void showSuggestionFragment(boolean scrollNeeded) {

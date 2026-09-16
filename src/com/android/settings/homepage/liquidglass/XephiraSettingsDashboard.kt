@@ -16,14 +16,22 @@
 
 package com.android.settings.homepage.liquidglass
 
+import android.app.Activity
+import android.app.settings.SettingsEnums
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.BatteryManager
 import android.os.Build
 import android.os.Environment
 import android.os.StatFs
 import android.os.SystemProperties
 import android.provider.Settings
+import android.util.Log
+import com.android.settings.activityembedding.ActivityEmbeddingRulesController
+import com.android.settings.overlay.FeatureFactory
+import com.android.settings.search.SearchFeatureProvider
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
@@ -98,7 +106,14 @@ fun XephiraSettingsDashboard(
             .padding(horizontal = 14.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        // ─── HERO STATUS & QUICK GLANCE ────────────────────────
+        // ─── 1. FLOATING PURE LIQUID GLASS SEARCH BAR ─────────────
+        LiquidGlassSearchBar(
+            onClick = {
+                launchSettingsSearch(context)
+            }
+        )
+
+        // ─── 2. HERO STATUS & QUICK GLANCE ────────────────────────
         LiquidGlassHeroBanner(
             xephiraVersion = xephiraVersion,
             androidVersion = androidVersion,
@@ -698,6 +713,64 @@ private fun LiquidGlassDivider(
 // ─────────────────────────────────────────────────────────────────────────────
 // HELPERS
 // ─────────────────────────────────────────────────────────────────────────────
+
+private fun launchSettingsSearch(context: Context) {
+    try {
+        val activity = context as? Activity
+            ?: (context as? ContextWrapper)?.baseContext as? Activity
+        val featureFactory = FeatureFactory.getFeatureFactory()
+        val searchProvider = featureFactory.searchFeatureProvider
+        val intent = searchProvider.buildSearchIntent(context, SettingsEnums.SETTINGS_HOMEPAGE)
+            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+        val resolveInfos = context.packageManager.queryIntentActivities(
+            intent,
+            PackageManager.MATCH_DEFAULT_ONLY
+        )
+        if (resolveInfos.isNotEmpty()) {
+            val searchComponentName = resolveInfos[0].componentInfo.componentName
+            intent.component = searchComponentName
+            ActivityEmbeddingRulesController.registerTwoPanePairRuleForSettingsHome(
+                context,
+                searchComponentName,
+                intent.action,
+                false /* finishPrimaryWithSecondary */,
+                true /* finishSecondaryWithPrimary */,
+                false /* clearTop */
+            )
+            featureFactory.slicesFeatureProvider.indexSliceDataAsync(context)
+            featureFactory.metricsFeatureProvider.action(
+                context,
+                SettingsEnums.ACTION_SEARCH_RESULTS,
+                SettingsEnums.SETTINGS_HOMEPAGE
+            )
+            if (activity != null) {
+                activity.startActivityForResult(intent, SearchFeatureProvider.REQUEST_CODE)
+            } else {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)
+            }
+            return
+        }
+    } catch (e: Throwable) {
+        Log.e("XephiraSettings", "Failed to launch native search via provider, falling back", e)
+    }
+
+    // Direct Intent Fallback
+    try {
+        val fallback = Intent(Settings.ACTION_APP_SEARCH_SETTINGS).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
+        context.startActivity(fallback)
+    } catch (e: Throwable) {
+        try {
+            val intent = Intent("android.settings.APP_SEARCH_SETTINGS").apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(intent)
+        } catch (ignored: Throwable) {}
+    }
+}
 
 private fun launchIntent(context: Context, action: String, fragmentClass: String?) {
     try {
