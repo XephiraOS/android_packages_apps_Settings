@@ -27,6 +27,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -109,7 +110,8 @@ fun Modifier.pureLiquidGlass(
     shape: Shape = RoundedCornerShape(26.dp),
     cornerRadius: Dp = 26.dp,
     refraction: Float = 14f,
-    borderWidth: Dp = 1.dp
+    borderWidth: Dp = 1.dp,
+    isDark: Boolean = isSystemInDarkTheme()
 ): Modifier {
     val infiniteTransition = rememberInfiniteTransition(label = "liquid_glass_reflection")
     val sweep by infiniteTransition.animateFloat(
@@ -122,18 +124,41 @@ fun Modifier.pureLiquidGlass(
         label = "sweep_offset"
     )
 
+    val borderColors = if (isDark) {
+        listOf(
+            Color(0x75FFFFFF), // Specular light hit
+            Color(0x1AFFFFFF), // Translucent edge
+            Color(0x45FFFFFF), // Soft rim reflection
+            Color(0x12FFFFFF)
+        )
+    } else {
+        listOf(
+            Color(0xB8FFFFFF), // Crisp top highlight reflection
+            Color(0x18000000), // Subtle glass contour in light theme
+            Color(0x85FFFFFF), // Specular rim
+            Color(0x0E000000)  // Soft bottom shadow boundary
+        )
+    }
+
+    val backgroundColors = if (isDark) {
+        listOf(
+            Color(0x1AFFFFFF), // 10% white top
+            Color(0x07FFFFFF)  // 2.7% white bottom (ultra clear liquid)
+        )
+    } else {
+        listOf(
+            Color(0xE6FFFFFF), // 90% frosted white top
+            Color(0xB8F1F5F9)  // 72% soft slate-white bottom
+        )
+    }
+
     // Base pure monochrome liquid glass (clear translucent gradient + specular hairline border)
     val baseModifier = this
         .clip(shape)
         .border(
             width = borderWidth,
             brush = Brush.linearGradient(
-                colors = listOf(
-                    Color(0x75FFFFFF), // Specular light hit
-                    Color(0x1AFFFFFF), // Translucent edge
-                    Color(0x45FFFFFF), // Soft rim reflection
-                    Color(0x12FFFFFF)
-                ),
+                colors = borderColors,
                 start = Offset(sweep, 0f),
                 end = Offset(sweep + 380f, 520f)
             ),
@@ -141,10 +166,7 @@ fun Modifier.pureLiquidGlass(
         )
         .background(
             brush = Brush.verticalGradient(
-                colors = listOf(
-                    Color(0x1AFFFFFF), // 10% white top
-                    Color(0x07FFFFFF)  // 2.7% white bottom (ultra clear liquid)
-                )
+                colors = backgroundColors
             ),
             shape = shape
         )

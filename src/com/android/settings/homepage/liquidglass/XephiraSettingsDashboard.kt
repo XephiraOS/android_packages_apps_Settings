@@ -31,6 +31,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -81,6 +82,7 @@ fun XephiraSettingsDashboard(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val isDark = isSystemInDarkTheme()
 
     val xephiraVersion = remember { SystemProperties.get("ro.xephira.version", "1.0") }
     val androidVersion = remember { SystemProperties.get("ro.xephira.android.version", "16") }
@@ -315,7 +317,7 @@ fun XephiraSettingsDashboard(
                 text = "XephiraOS • Pure Liquid Glass UI",
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color(0x60FFFFFF),
+                color = if (isDark) Color(0x60FFFFFF) else Color(0x60000000),
                 letterSpacing = 1.sp
             )
         }
@@ -328,6 +330,7 @@ fun XephiraSettingsDashboard(
 
 @Composable
 private fun LiquidGlassSearchBar(
+    isDark: Boolean = isSystemInDarkTheme(),
     onClick: () -> Unit
 ) {
     var isPressed by remember { mutableStateOf(false) }
@@ -345,7 +348,8 @@ private fun LiquidGlassSearchBar(
                 shape = RoundedCornerShape(32.dp),
                 cornerRadius = 32.dp,
                 refraction = 12f,
-                borderWidth = 1.dp
+                borderWidth = 1.dp,
+                isDark = isDark
             )
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -363,21 +367,21 @@ private fun LiquidGlassSearchBar(
             Icon(
                 imageVector = Icons.Outlined.Search,
                 contentDescription = "Search",
-                tint = Color.White,
+                tint = if (isDark) Color.White else Color(0xFF0F172A),
                 modifier = Modifier.size(22.dp)
             )
             Spacer(modifier = Modifier.width(14.dp))
             Text(
                 text = "Search settings...",
                 fontSize = 15.sp,
-                color = Color(0xAAFFFFFF),
+                color = if (isDark) Color(0xAAFFFFFF) else Color(0xFF64748B),
                 fontWeight = FontWeight.Normal,
                 modifier = Modifier.weight(1f)
             )
             Surface(
                 shape = CircleShape,
-                color = Color(0x20FFFFFF),
-                border = BorderStroke(1.dp, Color(0x35FFFFFF)),
+                color = if (isDark) Color(0x20FFFFFF) else Color(0x0D000000),
+                border = BorderStroke(1.dp, if (isDark) Color(0x35FFFFFF) else Color(0x18000000)),
                 modifier = Modifier.size(30.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
@@ -399,6 +403,7 @@ private fun LiquidGlassHeroBanner(
     buildType: String,
     batteryPct: Int,
     storageInfo: String,
+    isDark: Boolean = isSystemInDarkTheme(),
     onHeroClick: () -> Unit,
     onBatteryClick: () -> Unit,
     onStorageClick: () -> Unit,
@@ -423,7 +428,8 @@ private fun LiquidGlassHeroBanner(
                     shape = RoundedCornerShape(26.dp),
                     cornerRadius = 26.dp,
                     refraction = 16f,
-                    borderWidth = 1.dp
+                    borderWidth = 1.dp,
+                    isDark = isDark
                 )
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
@@ -455,18 +461,18 @@ private fun LiquidGlassHeroBanner(
                             text = "XephiraOS $xephiraVersion",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = if (isDark) Color.White else Color(0xFF0F172A)
                         )
                         Surface(
                             shape = CircleShape,
-                            color = Color(0x22FFFFFF),
-                            border = BorderStroke(1.dp, Color(0x40FFFFFF))
+                            color = if (isDark) Color(0x22FFFFFF) else Color(0x12000000),
+                            border = BorderStroke(1.dp, if (isDark) Color(0x40FFFFFF) else Color(0x24000000))
                         ) {
                             Text(
                                 text = buildType,
                                 fontSize = 9.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White,
+                                color = if (isDark) Color.White else Color(0xFF0F172A),
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                             )
                         }
@@ -477,14 +483,14 @@ private fun LiquidGlassHeroBanner(
                     Text(
                         text = "Android $androidVersion • ${Build.MODEL}",
                         fontSize = 12.sp,
-                        color = Color(0xFFD1D5DB)
+                        color = if (isDark) Color(0xFFD1D5DB) else Color(0xFF475569)
                     )
                 }
 
                 Icon(
                     imageVector = Icons.Outlined.ChevronRight,
                     contentDescription = null,
-                    tint = Color(0x60FFFFFF),
+                    tint = if (isDark) Color(0x60FFFFFF) else Color(0x60000000),
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -500,6 +506,7 @@ private fun LiquidGlassHeroBanner(
                 iconRes = R.drawable.ic_settings_wireless_filled,
                 label = "Wi-Fi",
                 status = "Active",
+                isDark = isDark,
                 onClick = onWifiClick
             )
             LiquidGlassStatusPill(
@@ -507,6 +514,7 @@ private fun LiquidGlassHeroBanner(
                 iconRes = R.drawable.ic_settings_battery_filled,
                 label = "Battery",
                 status = "$batteryPct%",
+                isDark = isDark,
                 onClick = onBatteryClick
             )
             LiquidGlassStatusPill(
@@ -514,6 +522,7 @@ private fun LiquidGlassHeroBanner(
                 iconRes = R.drawable.ic_storage_filled,
                 label = "Storage",
                 status = storageInfo.split(" ").firstOrNull() ?: "Ready",
+                isDark = isDark,
                 onClick = onStorageClick
             )
         }
@@ -526,6 +535,7 @@ private fun LiquidGlassStatusPill(
     iconRes: Int,
     label: String,
     status: String,
+    isDark: Boolean = isSystemInDarkTheme(),
     onClick: () -> Unit
 ) {
     Box(
@@ -534,7 +544,8 @@ private fun LiquidGlassStatusPill(
                 shape = RoundedCornerShape(18.dp),
                 cornerRadius = 18.dp,
                 refraction = 8f,
-                borderWidth = 1.dp
+                borderWidth = 1.dp,
+                isDark = isDark
             )
             .clickable { onClick() }
             .padding(horizontal = 10.dp, vertical = 10.dp)
@@ -546,7 +557,7 @@ private fun LiquidGlassStatusPill(
             Image(
                 painter = painterResource(id = iconRes),
                 contentDescription = label,
-                colorFilter = ColorFilter.tint(Color.White),
+                colorFilter = ColorFilter.tint(if (isDark) Color.White else Color(0xFF0F172A)),
                 modifier = Modifier.size(18.dp)
             )
             Spacer(modifier = Modifier.height(4.dp))
@@ -554,12 +565,12 @@ private fun LiquidGlassStatusPill(
                 text = status,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.White
+                color = if (isDark) Color.White else Color(0xFF0F172A)
             )
             Text(
                 text = label,
                 fontSize = 10.sp,
-                color = Color(0x90FFFFFF)
+                color = if (isDark) Color(0x90FFFFFF) else Color(0xFF64748B)
             )
         }
     }
@@ -568,6 +579,7 @@ private fun LiquidGlassStatusPill(
 @Composable
 private fun LiquidGlassCategoryGroup(
     title: String,
+    isDark: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     Column(
@@ -578,7 +590,7 @@ private fun LiquidGlassCategoryGroup(
             text = title,
             fontSize = 11.sp,
             fontWeight = FontWeight.SemiBold,
-            color = Color(0x85FFFFFF),
+            color = if (isDark) Color(0x85FFFFFF) else Color(0xFF64748B),
             letterSpacing = 1.2.sp,
             modifier = Modifier.padding(start = 10.dp, bottom = 2.dp)
         )
@@ -590,7 +602,8 @@ private fun LiquidGlassCategoryGroup(
                     shape = RoundedCornerShape(22.dp),
                     cornerRadius = 22.dp,
                     refraction = 12f,
-                    borderWidth = 1.dp
+                    borderWidth = 1.dp,
+                    isDark = isDark
                 )
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -605,6 +618,7 @@ private fun LiquidGlassTile(
     iconRes: Int,
     title: String,
     subtitle: String,
+    isDark: Boolean = isSystemInDarkTheme(),
     onClick: () -> Unit
 ) {
     var isPressed by remember { mutableStateOf(false) }
@@ -630,15 +644,15 @@ private fun LiquidGlassTile(
     ) {
         Surface(
             shape = CircleShape,
-            color = Color(0x1AFFFFFF),
-            border = BorderStroke(1.dp, Color(0x30FFFFFF)),
+            color = if (isDark) Color(0x1AFFFFFF) else Color(0x0D000000),
+            border = BorderStroke(1.dp, if (isDark) Color(0x30FFFFFF) else Color(0x18000000)),
             modifier = Modifier.size(38.dp)
         ) {
             Box(contentAlignment = Alignment.Center) {
                 Image(
                     painter = painterResource(id = iconRes),
                     contentDescription = title,
-                    colorFilter = ColorFilter.tint(Color.White),
+                    colorFilter = ColorFilter.tint(if (isDark) Color.White else Color(0xFF0F172A)),
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -651,14 +665,14 @@ private fun LiquidGlassTile(
                 text = title,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.White
+                color = if (isDark) Color.White else Color(0xFF0F172A)
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = subtitle,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Normal,
-                color = Color(0xFF9E9E9E),
+                color = if (isDark) Color(0xFF9E9E9E) else Color(0xFF64748B),
                 maxLines = 1
             )
         }
@@ -666,20 +680,22 @@ private fun LiquidGlassTile(
         Icon(
             imageVector = Icons.Outlined.ChevronRight,
             contentDescription = null,
-            tint = Color(0x45FFFFFF),
+            tint = if (isDark) Color(0x45FFFFFF) else Color(0x45000000),
             modifier = Modifier.size(18.dp)
         )
     }
 }
 
 @Composable
-private fun LiquidGlassDivider() {
+private fun LiquidGlassDivider(
+    isDark: Boolean = isSystemInDarkTheme()
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .height(0.75.dp)
-            .background(Color(0x14FFFFFF))
+            .background(if (isDark) Color(0x14FFFFFF) else Color(0x0F000000))
     )
 }
 

@@ -24,6 +24,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,6 +54,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -67,6 +69,7 @@ import com.android.settings.widget.liquidglass.pureLiquidGlass
  */
 @Composable
 fun XephiraAboutHeader() {
+    val isDark = isSystemInDarkTheme()
     val xephiraVersion = SystemProperties.get("ro.xephira.version", "1.0")
     val buildType = SystemProperties.get("ro.xephira.buildtype", "OFFICIAL")
     val androidVersion = SystemProperties.get("ro.xephira.android.version", "16")
@@ -93,7 +96,8 @@ fun XephiraAboutHeader() {
                 .fillMaxWidth()
                 .pureLiquidGlass(
                     shape = RoundedCornerShape(28.dp),
-                    refraction = 14f
+                    refraction = 14f,
+                    isDark = isDark
                 )
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
@@ -123,6 +127,7 @@ fun XephiraAboutHeader() {
                 Image(
                     painter = painterResource(id = R.drawable.xephira_logotype),
                     contentDescription = "Xephira",
+                    colorFilter = if (!isDark) ColorFilter.tint(Color(0xFF0F172A)) else null,
                     modifier = Modifier.height(24.dp)
                 )
 
@@ -132,7 +137,7 @@ fun XephiraAboutHeader() {
                     text = "XephiraOS $xephiraVersion",
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
+                    color = if (isDark) Color.White else Color(0xFF0F172A),
                     letterSpacing = 0.5.sp
                 )
 
@@ -142,22 +147,22 @@ fun XephiraAboutHeader() {
                     text = "Android $androidVersion",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Normal,
-                    color = Color(0xFFD1D5DB)
+                    color = if (isDark) Color(0xFFD1D5DB) else Color(0xFF475569)
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Minimalist Frosted White Pill Badge
+                // Minimalist Frosted Pill Badge
                 Surface(
                     shape = CircleShape,
-                    color = Color(0x22FFFFFF),
-                    border = BorderStroke(1.dp, Color(0x40FFFFFF))
+                    color = if (isDark) Color(0x22FFFFFF) else Color(0x12000000),
+                    border = BorderStroke(1.dp, if (isDark) Color(0x40FFFFFF) else Color(0x24000000))
                 ) {
                     Text(
                         text = buildType,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = Color.White,
+                        color = if (isDark) Color.White else Color(0xFF0F172A),
                         modifier = Modifier.padding(horizontal = 14.dp, vertical = 4.dp)
                     )
                 }
@@ -173,13 +178,15 @@ fun XephiraAboutHeader() {
                 modifier = Modifier.weight(1f),
                 icon = Icons.Outlined.Smartphone,
                 title = "Device",
-                subtitle = Build.MODEL
+                subtitle = Build.MODEL,
+                isDark = isDark
             )
             PureGlassTile(
                 modifier = Modifier.weight(1f),
                 icon = Icons.Outlined.Memory,
                 title = "Processor",
-                subtitle = codename
+                subtitle = codename,
+                isDark = isDark
             )
         }
 
@@ -191,13 +198,15 @@ fun XephiraAboutHeader() {
                 modifier = Modifier.weight(1f),
                 icon = Icons.Outlined.Storage,
                 title = "Platform",
-                subtitle = "Linux 6.x"
+                subtitle = "Linux 6.x",
+                isDark = isDark
             )
             PureGlassTile(
                 modifier = Modifier.weight(1f),
                 icon = Icons.Outlined.Security,
                 title = "Security",
-                subtitle = securityPatch
+                subtitle = securityPatch,
+                isDark = isDark
             )
         }
     }
@@ -208,13 +217,15 @@ private fun PureGlassTile(
     modifier: Modifier = Modifier,
     icon: ImageVector,
     title: String,
-    subtitle: String
+    subtitle: String,
+    isDark: Boolean = isSystemInDarkTheme()
 ) {
     Box(
         modifier = modifier
             .pureLiquidGlass(
                 shape = RoundedCornerShape(20.dp),
-                refraction = 9f
+                refraction = 9f,
+                isDark = isDark
             )
             .padding(16.dp)
     ) {
@@ -222,7 +233,7 @@ private fun PureGlassTile(
             Icon(
                 imageVector = icon,
                 contentDescription = title,
-                tint = Color.White,
+                tint = if (isDark) Color.White else Color(0xFF0F172A),
                 modifier = Modifier.size(22.dp)
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -230,13 +241,13 @@ private fun PureGlassTile(
                 text = title,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.White
+                color = if (isDark) Color.White else Color(0xFF0F172A)
             )
             Text(
                 text = subtitle,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Normal,
-                color = Color(0xFF9E9E9E),
+                color = if (isDark) Color(0xFF9E9E9E) else Color(0xFF64748B),
                 maxLines = 1
             )
         }
