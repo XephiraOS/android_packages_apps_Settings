@@ -21,6 +21,11 @@
     android:title="@string/firmware_version"
     settings:keywords="@string/keywords_android_version">
 
+    <!-- Pure Liquid Glass Full Compose Screen -->
+    <com.android.settings.spa.preference.ComposePreference
+        android:key="xephira_firmware_version_compose"
+        settings:controller="com.android.settings.deviceinfo.firmwareversion.XephiraFirmwareVersionPreferenceController"/>
+
     <!-- Android version -->
     <Preference
         android:key="os_firmware_version"

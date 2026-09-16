@@ -37,7 +37,7 @@ open class FirmwareVersionScreen : PreferenceScreenMixin, PreferenceSummaryProvi
 
     override fun tags(context: Context) = arrayOf(TAG_DEVICE_STATE_SCREEN)
 
-    override fun isFlagEnabled(context: Context) = Flags.catalystFirmwareVersion()
+    override fun isFlagEnabled(context: Context) = false
 
     override val key: String
         get() = KEY

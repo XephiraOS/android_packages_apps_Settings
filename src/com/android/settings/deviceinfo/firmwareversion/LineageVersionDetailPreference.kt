@@ -44,7 +44,7 @@ class LineageVersionDetailPreference :
         get() = "lineage_version"
 
     override val title: Int
-        get() = org.lineageos.platform.internal.R.string.lineage_version
+        get() = R.string.xephira_version
 
     override val indexable
         get() = false
@@ -62,8 +62,11 @@ class LineageVersionDetailPreference :
         preference.onPreferenceClickListener = this
     }
 
-    override fun getSummary(context: Context): CharSequence =
-        SystemProperties.get(LINEAGE_VERSION_PROPERTY, context.getString(R.string.unknown));
+    override fun getSummary(context: Context): CharSequence {
+        val xephiraVer = SystemProperties.get("ro.xephira.version")
+        if (xephiraVer.isNotEmpty()) return xephiraVer
+        return SystemProperties.get(LINEAGE_VERSION_PROPERTY, context.getString(R.string.unknown))
+    }
 
     // return true swallows the click event, while return false will start the intent
     override fun onPreferenceClick(preference: Preference): Boolean {

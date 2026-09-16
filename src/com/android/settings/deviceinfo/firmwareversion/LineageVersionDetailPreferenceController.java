@@ -77,8 +77,12 @@ public class LineageVersionDetailPreferenceController extends BasePreferenceCont
 
     @Override
     public CharSequence getSummary() {
-        return SystemProperties.get(KEY_LINEAGE_VERSION_PROP,
-                mContext.getString(R.string.unknown));
+        String version = SystemProperties.get("ro.xephira.version");
+        if (TextUtils.isEmpty(version)) {
+            version = SystemProperties.get(KEY_LINEAGE_VERSION_PROP,
+                    mContext.getString(R.string.unknown));
+        }
+        return version;
     }
 
     @Override

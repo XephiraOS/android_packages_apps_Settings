@@ -33,7 +33,7 @@ public class FirmwareVersionSettings extends DashboardFragment {
 
     @Override
     public @Nullable String getPreferenceScreenBindingKey(@NonNull Context context) {
-        return FirmwareVersionScreen.KEY;
+        return null;
     }
 
     @Override

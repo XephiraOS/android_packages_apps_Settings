@@ -14962,4 +14962,8 @@
     <string name="xephira_liquid_perf_category">Rendering &amp; Dynamics</string>
     <string name="xephira_glass_120hz_title">Ultra-Fluid 120Hz Visualizers</string>
     <string name="xephira_glass_120hz_summary">Render visualizer waveforms and photon particles at maximum panel refresh rate</string>
+
+    <!-- XephiraOS Version Strings -->
+    <string name="xephira_version">XephiraOS version</string>
+    <string name="xephira_build_date">XephiraOS build date</string>
 </resources>
