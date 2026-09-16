@@ -44,13 +44,33 @@ class SimpleBuildNumberPreference :
 
     override fun getSummary(context: Context): CharSequence? {
         val isRtl = context.resources.configuration.layoutDirection == LAYOUT_DIRECTION_RTL
-        return BidiFormatter.getInstance(isRtl).unicodeWrap(Build.DISPLAY)
+        return BidiFormatter.getInstance(isRtl).unicodeWrap(getSanitizedBuildNumber())
     }
 
     override fun bind(preference: Preference, metadata: PreferenceMetadata) {
         super.bind(preference, metadata)
         preference.isSelectable = false
         preference.isCopyingEnabled = true
+    }
+
+    companion object {
+        fun getSanitizedBuildNumber(): String {
+            val custom = android.os.SystemProperties.get("ro.xephira.display.version")
+            if (custom.isNotEmpty()) return custom
+
+            val raw = Build.DISPLAY
+            if (raw.isNullOrEmpty()) {
+                val ver = android.os.SystemProperties.get("ro.xephira.version", "1.0")
+                val type = android.os.SystemProperties.get("ro.xephira.buildtype", "OFFICIAL")
+                return "XephiraOS-$ver-${Build.DEVICE}-$type"
+            }
+
+            return raw
+                .replace("lineage_", "xephira_", ignoreCase = true)
+                .replace("lineage-", "xephira-", ignoreCase = true)
+                .replace("LineageOS", "XephiraOS", ignoreCase = true)
+                .replace("lineage", "xephira", ignoreCase = true)
+        }
     }
 }
 // LINT.ThenChange(SimpleBuildNumberPreferenceController.java)

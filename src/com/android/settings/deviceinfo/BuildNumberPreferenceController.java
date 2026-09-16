@@ -83,7 +83,24 @@ public class BuildNumberPreferenceController extends BasePreferenceController im
 
     @Override
     public CharSequence getSummary() {
-        return BidiFormatter.getInstance().unicodeWrap(Build.DISPLAY);
+        return BidiFormatter.getInstance().unicodeWrap(getSanitizedBuildNumber());
+    }
+
+    private String getSanitizedBuildNumber() {
+        String custom = android.os.SystemProperties.get("ro.xephira.display.version");
+        if (!android.text.TextUtils.isEmpty(custom)) {
+            return custom;
+        }
+        String raw = Build.DISPLAY;
+        if (android.text.TextUtils.isEmpty(raw)) {
+            String ver = android.os.SystemProperties.get("ro.xephira.version", "1.0");
+            String type = android.os.SystemProperties.get("ro.xephira.buildtype", "OFFICIAL");
+            return "XephiraOS-" + ver + "-" + Build.DEVICE + "-" + type;
+        }
+        return raw.replaceAll("(?i)lineage_", "xephira_")
+                .replaceAll("(?i)lineage-", "xephira-")
+                .replaceAll("(?i)lineageos", "XephiraOS")
+                .replaceAll("(?i)lineage", "xephira");
     }
 
     @Override

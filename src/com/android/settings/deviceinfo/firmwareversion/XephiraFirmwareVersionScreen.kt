@@ -108,7 +108,7 @@ fun XephiraFirmwareVersionScreen(
     val basebandVersion = remember {
         SystemProperties.get("gsm.version.baseband", Build.getRadioVersion() ?: "Unknown")
     }
-    val buildNumber = remember { Build.DISPLAY }
+    val buildNumber = remember { getSanitizedBuildNumber() }
     val buildDate = remember { SystemProperties.get("ro.build.date", "Recent") }
     val xephiraVersion = remember {
         val ver = SystemProperties.get("ro.xephira.version")
@@ -739,4 +739,22 @@ private fun getSELinuxStatus(): String {
     } catch (e: Throwable) {
         "Enforcing"
     }
+}
+
+fun getSanitizedBuildNumber(): String {
+    val custom = SystemProperties.get("ro.xephira.display.version")
+    if (custom.isNotEmpty()) return custom
+
+    val raw = Build.DISPLAY
+    if (raw.isNullOrEmpty()) {
+        val ver = SystemProperties.get("ro.xephira.version", "1.0")
+        val type = SystemProperties.get("ro.xephira.buildtype", "OFFICIAL")
+        return "XephiraOS-$ver-${Build.DEVICE}-$type"
+    }
+
+    return raw
+        .replace("lineage_", "xephira_", ignoreCase = true)
+        .replace("lineage-", "xephira-", ignoreCase = true)
+        .replace("LineageOS", "XephiraOS", ignoreCase = true)
+        .replace("lineage", "xephira", ignoreCase = true)
 }
