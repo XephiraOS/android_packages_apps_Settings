@@ -14949,4 +14949,17 @@
     <string name="safety_center_device_finder_search_terms"></string>
     <!-- Safety Center system component update search terms [CHAR LIMIT=NONE] -->
     <string name="safety_center_system_component_update_search_terms"></string>
+
+    <!-- Xephira Liquid Lab Strings -->
+    <string name="xephira_liquid_lab_title">Liquid Lab</string>
+    <string name="xephira_liquid_lab_summary">Real-time glass optics, refraction depth, and visualizer dynamics</string>
+    <string name="xephira_liquid_optics_category">Optical Refraction</string>
+    <string name="xephira_glass_refraction_title">Refraction Depth</string>
+    <string name="xephira_glass_refraction_summary">Controls the optical displacement and border meniscus thickness</string>
+    <string name="xephira_liquid_tint_category">Glass Tint &amp; Hue</string>
+    <string name="xephira_glass_tint_title">Glass Color Accent</string>
+    <string name="xephira_glass_tint_summary">Applies dynamic optical tinting across translucent surfaces</string>
+    <string name="xephira_liquid_perf_category">Rendering &amp; Dynamics</string>
+    <string name="xephira_glass_120hz_title">Ultra-Fluid 120Hz Visualizers</string>
+    <string name="xephira_glass_120hz_summary">Render visualizer waveforms and photon particles at maximum panel refresh rate</string>
 </resources>

@@ -28,6 +28,15 @@
         android:selectable="false"
         settings:controller="com.android.settings.display.XephiraDisplayHeroPreferenceController" />
 
+    <!-- Xephira Liquid Lab Customizer -->
+    <Preference
+        android:key="xephira_liquid_lab"
+        android:title="@string/xephira_liquid_lab_title"
+        android:summary="@string/xephira_liquid_lab_summary"
+        android:fragment="com.android.settings.display.liquidlab.LiquidLabSettings"
+        android:icon="@drawable/ic_settings_display_filled"
+        android:order="-950" />
+
     <PreferenceCategory
         android:key="category_brightness"
         android:title="@string/category_name_brightness"

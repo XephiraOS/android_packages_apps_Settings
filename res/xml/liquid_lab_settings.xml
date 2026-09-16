@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2026 XephiraOS Project
+     Licensed under the Apache License, Version 2.0 (the "License");
+-->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:settings="http://schemas.android.com/apk/res-auto"
+    android:key="liquid_lab_settings_screen"
+    android:title="@string/xephira_liquid_lab_title">
+
+    <!-- Interactive Live Glass Specimen Preview -->
+    <com.android.settings.spa.preference.ComposePreference
+        android:key="liquid_lab_specimen_preview"
+        android:order="-100"
+        android:selectable="false"
+        settings:controller="com.android.settings.display.liquidlab.LiquidLabSpecimenController" />
+
+    <PreferenceCategory
+        android:key="category_liquid_optics"
+        android:title="@string/xephira_liquid_optics_category"
+        android:order="10">
+
+        <ListPreference
+            android:key="xephira_glass_refraction"
+            android:title="@string/xephira_glass_refraction_title"
+            android:summary="@string/xephira_glass_refraction_summary"
+            android:defaultValue="16"
+            android:entries="@array/xephira_glass_refraction_entries"
+            android:entryValues="@array/xephira_glass_refraction_values" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="category_liquid_tint"
+        android:title="@string/xephira_liquid_tint_category"
+        android:order="20">
+
+        <ListPreference
+            android:key="xephira_glass_tint"
+            android:title="@string/xephira_glass_tint_title"
+            android:summary="@string/xephira_glass_tint_summary"
+            android:defaultValue="monet"
+            android:entries="@array/xephira_glass_tint_entries"
+            android:entryValues="@array/xephira_glass_tint_values" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="category_liquid_perf"
+        android:title="@string/xephira_liquid_perf_category"
+        android:order="30">
+
+        <SwitchPreferenceCompat
+            android:key="xephira_glass_120hz"
+            android:title="@string/xephira_glass_120hz_title"
+            android:summary="@string/xephira_glass_120hz_summary"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

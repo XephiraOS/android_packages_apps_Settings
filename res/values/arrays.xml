@@ -1665,4 +1665,34 @@
         <item>Quick settings</item>
         <item>Lockscreen</item>
     </string-array>
+
+    <!-- Xephira Liquid Lab Glass Refraction entries & values -->
+    <string-array name="xephira_glass_refraction_entries">
+        <item>Subtle (8dp)</item>
+        <item>Balanced (16dp)</item>
+        <item>Deep Crystal (24dp)</item>
+        <item>Maximum Refraction (32dp)</item>
+    </string-array>
+
+    <string-array name="xephira_glass_refraction_values" translatable="false">
+        <item>8</item>
+        <item>16</item>
+        <item>24</item>
+        <item>32</item>
+    </string-array>
+
+    <!-- Xephira Liquid Lab Glass Tint entries & values -->
+    <string-array name="xephira_glass_tint_entries">
+        <item>Dynamic Monet (Follows Wallpaper)</item>
+        <item>Ice Cyan</item>
+        <item>Electric Violet</item>
+        <item>Pure Frosted Monochrome</item>
+    </string-array>
+
+    <string-array name="xephira_glass_tint_values" translatable="false">
+        <item>monet</item>
+        <item>ice_cyan</item>
+        <item>neon_purple</item>
+        <item>monochrome</item>
+    </string-array>
 </resources>
