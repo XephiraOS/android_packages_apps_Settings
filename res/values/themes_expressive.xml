@@ -85,8 +85,16 @@
         <!-- Redefine the ActionBar style for contentInsetStart -->
         <item name="android:actionBarStyle">@style/Widget.ActionBar.SubSettings</item>
 
+        <item name="android:windowBackground">@color/xephira_bg_base</item>
+        <item name="android:colorBackground">@color/xephira_bg_base</item>
+        <item name="colorSurface">@color/xephira_bg_base</item>
+        <item name="preferenceBackgroundColor">@drawable/preference_background</item>
+        <item name="android:listDivider">@drawable/xephira_list_divider</item>
+
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
     </style>
 
     <style name="Theme.Settings.Home.Expressive" parent="Theme.Settings.Expressive.NoActionBar">

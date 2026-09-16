@@ -26,6 +26,8 @@
 
     <style name="Widget.ActionBar.SubSettings" parent="Widget.ActionBar">
         <item name="android:contentInsetStart">@dimen/actionbar_subsettings_contentInsetStart</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:elevation">0dp</item>
     </style>
 
     <style name="info_label">

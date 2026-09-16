@@ -296,4 +296,20 @@
 
     <color name="gm_grey_900">#202124</color>
 
+    <!-- Xephira Liquid Glass Palette (Light Mode) -->
+    <color name="xephira_bg_base">#F8FAFC</color>
+    <color name="xephira_glass_surface">#E6FFFFFF</color>
+    <color name="xephira_glass_surface_elevated">#F2FFFFFF</color>
+    <color name="xephira_glass_border">#18000000</color>
+    <color name="xephira_glass_border_highlight">#80FFFFFF</color>
+    <color name="xephira_glass_ripple">#1A000000</color>
+    <color name="xephira_text_primary">#0F172A</color>
+    <color name="xephira_text_secondary">#475569</color>
+    <color name="xephira_text_muted">#64748B</color>
+    <color name="xephira_category_title">#64748B</color>
+    <color name="xephira_divider_color">#0F000000</color>
+    <color name="xephira_icon_badge_bg">#0D000000</color>
+    <color name="xephira_icon_badge_border">#18000000</color>
+    <color name="xephira_icon_tint">#0F172A</color>
+
 </resources>

@@ -99,5 +99,22 @@
 
     <!-- Keyboard a11y input dialog -->
     <color name="input_dialog_slider_progress">@android:color/system_on_primary_container_dark</color>
+
+    <!-- Xephira Liquid Glass Palette (Dark Mode) -->
+    <color name="xephira_bg_base">#060910</color>
+    <color name="xephira_glass_surface">#14FFFFFF</color>
+    <color name="xephira_glass_surface_elevated">#1EFFFFFF</color>
+    <color name="xephira_glass_border">#2EFFFFFF</color>
+    <color name="xephira_glass_border_highlight">#75FFFFFF</color>
+    <color name="xephira_glass_ripple">#2EFFFFFF</color>
+    <color name="xephira_text_primary">#FFFFFF</color>
+    <color name="xephira_text_secondary">#D1D5DB</color>
+    <color name="xephira_text_muted">#9E9E9E</color>
+    <color name="xephira_category_title">#85FFFFFF</color>
+    <color name="xephira_divider_color">#14FFFFFF</color>
+    <color name="xephira_icon_badge_bg">#1AFFFFFF</color>
+    <color name="xephira_icon_badge_border">#30FFFFFF</color>
+    <color name="xephira_icon_tint">#FFFFFF</color>
+
 </resources>
 

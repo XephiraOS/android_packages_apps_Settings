@@ -20,11 +20,16 @@
 <resources>
 
     <style name="SettingsPreferenceTheme" parent="@style/PreferenceTheme.SettingsLib">
+        <item name="preferenceCategoryStyle">@style/XephiraPreferenceCategory</item>
         <item name="cardPreferenceStyle">@style/CardPreference</item>
         <item name="slicePreferenceStyle">@style/SlicePreference</item>
         <item name="seekBarPreferenceStyle">@style/SettingsSeekBarPreference</item>
         <item name="twoStateButtonPreferenceStyle">@style/TwoStateButtonPreference</item>
         <item name="preferenceFragmentCompatStyle">@style/SettingsPreferenceFragmentStyle</item>
+    </style>
+
+    <style name="XephiraPreferenceCategory" parent="@style/Preference.Category.Material">
+        <item name="android:layout">@layout/xephira_preference_category</item>
     </style>
 
     <style name="PreferenceTheme.SetupWizard" parent="@style/SettingsPreferenceTheme">
@@ -59,7 +64,8 @@
     </style>
 
     <style name="SettingsPreferenceFragmentStyle" parent="@style/PreferenceFragment.Material">
-        <item name="android:divider">@*android:drawable/list_divider_material</item>
+        <item name="android:divider">@drawable/xephira_list_divider</item>
+        <item name="android:dividerHeight">1dp</item>
     </style>
 
     <style name="SetupWizardPreferenceFragmentStyle" parent="PreferenceFragment.Material">
