@@ -79,11 +79,20 @@ fun XephiraAboutHeader() {
 
     var clickCount by remember { mutableIntStateOf(0) }
     var isPressed by remember { mutableStateOf(false) }
+    var showHUD by remember { mutableStateOf(false) }
+
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.94f else 1.0f,
         animationSpec = spring(dampingRatio = 0.5f),
         label = "logo_scale"
     )
+
+    if (showHUD) {
+        XephiraPerformanceHUD(
+            onDismiss = { showHUD = false },
+            isDark = isDark
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -107,6 +116,11 @@ fun XephiraAboutHeader() {
                     clickCount++
                     isPressed = !isPressed
                     haptics.confirm()
+                    if (clickCount >= 5) {
+                        clickCount = 0
+                        showHUD = true
+                        haptics.gesturePulse()
+                    }
                 }
                 .padding(24.dp)
         ) {
