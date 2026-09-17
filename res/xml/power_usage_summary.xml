@@ -33,11 +33,13 @@
         android:title="@string/summary_placeholder"
         android:selectable="false"
         android:paddingBottom="0px"
+        settings:isPreferenceVisible="false"
         settings:controller="com.android.settings.fuelgauge.BatteryHeaderPreferenceController" />
 
     <com.android.settings.fuelgauge.BatteryHeaderTextPreference
         android:key="battery_header_text"
         android:selectable="false"
+        settings:isPreferenceVisible="false"
         settings:controller="com.android.settings.fuelgauge.BatteryHeaderTextPreferenceController" />
 
     <com.android.settingslib.widget.LayoutPreference

@@ -196,6 +196,13 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
                     /* scrollNeeded= */ false);
         }
         super.onStart();
+        hideDuplicatePreferences();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        hideDuplicatePreferences();
     }
 
     private boolean isOnlyOneActivityInTask() {
@@ -307,11 +314,25 @@ public class TopLevelSettings extends DashboardFragment implements SplitLayoutLi
 
     @Override
     protected RecyclerView.Adapter onCreateAdapter(PreferenceScreen preferenceScreen) {
+        hideDuplicatePreferences();
         if (mIsEmbeddingActivityEnabled && (getActivity() instanceof SettingsHomepageActivity)) {
             return mHighlightMixin.onCreateAdapter(this, preferenceScreen, mScrollNeeded);
         }
 
         return new RoundCornerPreferenceAdapter(preferenceScreen);
+    }
+
+    private void hideDuplicatePreferences() {
+        PreferenceScreen screen = getPreferenceScreen();
+        if (screen == null) {
+            return;
+        }
+        for (int i = 0; i < screen.getPreferenceCount(); i++) {
+            Preference pref = screen.getPreference(i);
+            if (!"top_level_xephira_dashboard".equals(pref.getKey())) {
+                pref.setVisible(false);
+            }
+        }
     }
 
     @Override

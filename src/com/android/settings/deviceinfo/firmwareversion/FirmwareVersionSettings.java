@@ -51,6 +51,31 @@ public class FirmwareVersionSettings extends DashboardFragment {
         return SettingsEnums.DIALOG_FIRMWARE_VERSION;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        hideDuplicatePreferences();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        hideDuplicatePreferences();
+    }
+
+    private void hideDuplicatePreferences() {
+        androidx.preference.PreferenceScreen screen = getPreferenceScreen();
+        if (screen == null) {
+            return;
+        }
+        for (int i = 0; i < screen.getPreferenceCount(); i++) {
+            androidx.preference.Preference pref = screen.getPreference(i);
+            if (!"xephira_firmware_version_compose".equals(pref.getKey())) {
+                pref.setVisible(false);
+            }
+        }
+    }
+
     public static final BaseSearchIndexProvider SEARCH_INDEX_DATA_PROVIDER =
             new BaseSearchIndexProvider(
                     Flags.catalystFirmwareVersion() && Flags.catalystSettingsSearch() ? 0

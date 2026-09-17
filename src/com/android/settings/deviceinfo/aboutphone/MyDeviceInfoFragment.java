@@ -124,6 +124,26 @@ public class MyDeviceInfoFragment extends DashboardFragment
     public void onStart() {
         super.onStart();
         initHeader();
+        hideDuplicatePreferences();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        hideDuplicatePreferences();
+    }
+
+    private void hideDuplicatePreferences() {
+        PreferenceScreen screen = getPreferenceScreen();
+        if (screen == null) {
+            return;
+        }
+        for (int i = 0; i < screen.getPreferenceCount(); i++) {
+            Preference pref = screen.getPreference(i);
+            if (!"xephira_about_hero".equals(pref.getKey())) {
+                pref.setVisible(false);
+            }
+        }
     }
 
     @Override

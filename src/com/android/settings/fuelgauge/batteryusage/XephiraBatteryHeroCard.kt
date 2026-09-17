@@ -36,10 +36,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bolt
-import androidx.compose.material.icons.outlined.BatteryChargingFull
-import androidx.compose.material.icons.outlined.BatteryStd
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -50,9 +46,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.android.settings.R
 import com.android.settings.widget.liquidglass.anim.LiquidWaveVisualizer
 import com.android.settings.widget.liquidglass.pureLiquidGlass
 
@@ -129,7 +127,7 @@ fun XephiraBatteryHeroCard() {
                     if (isCharging) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Icon(
-                            imageVector = Icons.Filled.Bolt,
+                            painter = painterResource(id = R.drawable.ic_battery_charging),
                             contentDescription = "Charging",
                             tint = primaryColor,
                             modifier = Modifier.size(28.dp)
@@ -173,7 +171,9 @@ fun XephiraBatteryHeroCard() {
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
-                        imageVector = if (isCharging) Icons.Outlined.BatteryChargingFull else Icons.Outlined.BatteryStd,
+                        painter = painterResource(
+                            id = if (isCharging) R.drawable.ic_battery_charging else R.drawable.ic_settings_battery_filled
+                        ),
                         contentDescription = null,
                         tint = primaryColor,
                         modifier = Modifier.size(30.dp)

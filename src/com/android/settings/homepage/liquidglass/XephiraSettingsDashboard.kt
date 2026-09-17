@@ -36,6 +36,7 @@ import android.os.SystemProperties
 import android.os.storage.StorageManager
 import android.provider.Settings
 import android.util.Log
+import com.android.settings.SettingsActivity
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -203,7 +204,7 @@ fun XephiraSettingsDashboard(
                     QuickChipTarget.BATTERY -> launchIntent(
                         context,
                         Intent.ACTION_POWER_USAGE_SUMMARY,
-                        "com.android.settings.fuelgauge.PowerUsageSummary"
+                        "com.android.settings.fuelgauge.batteryusage.PowerUsageSummary"
                     )
                     QuickChipTarget.DISPLAY -> launchIntent(
                         context,
@@ -241,7 +242,7 @@ fun XephiraSettingsDashboard(
                 showPerformanceHUD = true
             },
             onBatteryClick = {
-                launchIntent(context, Intent.ACTION_POWER_USAGE_SUMMARY, "com.android.settings.fuelgauge.PowerUsageSummary")
+                launchIntent(context, Intent.ACTION_POWER_USAGE_SUMMARY, "com.android.settings.fuelgauge.batteryusage.PowerUsageSummary")
             },
             onStorageClick = {
                 launchIntent(context, Settings.ACTION_INTERNAL_STORAGE_SETTINGS, "com.android.settings.deviceinfo.StorageDashboardFragment")
@@ -325,7 +326,7 @@ fun XephiraSettingsDashboard(
                 badge = batteryState.statusText,
                 isDark = isDark,
                 onClick = {
-                    launchIntent(context, Intent.ACTION_POWER_USAGE_SUMMARY, "com.android.settings.fuelgauge.PowerUsageSummary")
+                    launchIntent(context, Intent.ACTION_POWER_USAGE_SUMMARY, "com.android.settings.fuelgauge.batteryusage.PowerUsageSummary")
                 }
             )
             LiquidGlassDivider(isDark = isDark)
@@ -1305,6 +1306,9 @@ private fun launchIntent(context: Context, action: String, fragmentClass: String
     try {
         val intent = Intent(action).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            if (fragmentClass != null) {
+                putExtra(SettingsActivity.EXTRA_SHOW_FRAGMENT, fragmentClass)
+            }
         }
         context.startActivity(intent)
     } catch (e: Throwable) {

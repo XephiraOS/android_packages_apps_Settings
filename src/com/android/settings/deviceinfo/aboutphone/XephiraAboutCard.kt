@@ -136,6 +136,7 @@ fun XephiraAboutScreen(
     var devHits by remember { mutableIntStateOf(0) }
     var isPressed by remember { mutableStateOf(false) }
     var showHUD by remember { mutableStateOf(false) }
+    var showSimDialog by remember { mutableStateOf(false) }
 
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.94f else 1.0f,
@@ -364,7 +365,7 @@ fun XephiraAboutScreen(
                 isDark = isDark,
                 onClick = {
                     haptics.lightClick()
-                    launchSubSettings(context, "com.android.settings.deviceinfo.simstatus.SimStatus")
+                    showSimDialog = true
                 }
             )
         }
@@ -497,6 +498,14 @@ fun XephiraAboutScreen(
     if (showHUD) {
         XephiraPerformanceHUD(
             onDismiss = { showHUD = false },
+            isDark = isDark
+        )
+    }
+
+    // SIM Status Modal Dialog
+    if (showSimDialog) {
+        XephiraSimStatusDialog(
+            onDismiss = { showSimDialog = false },
             isDark = isDark
         )
     }
